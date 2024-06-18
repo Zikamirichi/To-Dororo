@@ -8,45 +8,48 @@ import androidx.core.app.ActivityOptionsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navbar)
-        bottomNavigationView.selectedItemId = R.id.toDo
-
-        val options = ActivityOptionsCompat.makeCustomAnimation(
-            applicationContext,
-            R.anim.slide_in_right, // Enter animation
-            R.anim.slide_out_left // Exit animation
-        )
-
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.navbar)
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
+            when(menuItem.itemId){
                 R.id.toDo -> {
-                    true // Return true to indicate item selection handled
+                    Toast.makeText(this, "To-Do", Toast.LENGTH_SHORT).show()
+                    replaceFragment(ToDoListFragment())
+                    true
                 }
                 R.id.pomodoro -> {
-                    startActivity(Intent(applicationContext, PomodoroTimer_Activity::class.java), options.toBundle())
-                    finish()
-                    true // Return true to indicate item selection handled
+                    Toast.makeText(this, "Pomodoro", Toast.LENGTH_SHORT).show()
+                    replaceFragment(PomodoroTimerFragment())
+                    true
                 }
                 R.id.virtualPet -> {
-                    startActivity(Intent(applicationContext, VirtualPet_Activity::class.java), options.toBundle())
-                    finish()
-                    true // Return true to indicate item selection handled
+                    Toast.makeText(this, "Virtual Pet", Toast.LENGTH_SHORT).show()
+                    replaceFragment(VirtualPetFragment())
+                    true
                 }
                 R.id.userProfile -> {
-                    startActivity(Intent(applicationContext, UserProfile_Activity::class.java), options.toBundle())
-                    finish()
-                    true // Return true to indicate item selection handled
+                    Toast.makeText(this, "User Profile", Toast.LENGTH_SHORT).show()
+                    replaceFragment(UserProfileFragment())
+                    true
                 }
-                else -> false // Return false for items not handled
+                else -> false
             }
         }
+        replaceFragment(ToDoListFragment())
+
+    }
+
+    private fun replaceFragment(fragment: Fragment){
+        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit()
     }
 
 }

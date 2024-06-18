@@ -4,7 +4,8 @@
     <item
         android:id="@+id/toDo"
         android:icon="@drawable/to_do_list"
-        android:title="To Do List"/>
+        android:title="To Do List"
+        />
 
     <item
         android:id="@+id/pomodoro"
