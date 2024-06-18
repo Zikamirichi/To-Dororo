@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PetGalleryFragment">
+
+    <TextView
+        android:id="@+id/tvPetgallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Pet Gallery"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvCat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Cat"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
+
+    <ImageView
+        android:id="@+id/ivCatBaby"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cat_baby"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
+
+    <ImageView
+        android:id="@+id/ivCatTeen"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="6dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cat_teen"
+        app:layout_constraintEnd_toStartOf="@+id/ivCatAdult"
+        app:layout_constraintStart_toEndOf="@+id/ivCatBaby"
+        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
+
+    <ImageView
+        android:id="@+id/ivCatAdult"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/cat_adult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
+
+    <TextView
+        android:id="@+id/tvDog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Dog"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCatBaby" />
+
+    <ImageView
+        android:id="@+id/ivDogBaby"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dog_baby"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCatBaby" />
+
+    <ImageView
+        android:id="@+id/ivDogTeen"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="6dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dog_teen"
+        app:layout_constraintEnd_toStartOf="@+id/ivDogAdult"
+        app:layout_constraintStart_toEndOf="@+id/ivDogBaby"
+        app:layout_constraintTop_toBottomOf="@+id/ivCatTeen" />
+
+    <ImageView
+        android:id="@+id/ivDogAdult"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/dog_adult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivCatAdult" />
+
+    <TextView
+        android:id="@+id/tvParrot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="13dp"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Parrot"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivDogBaby" />
+
+    <ImageView
+        android:id="@+id/ivParrotBaby"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/parrot_baby"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivDogBaby" />
+
+    <ImageView
+        android:id="@+id/ivParrotTeen"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="6dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/locked_petgallery"
+        app:layout_constraintEnd_toStartOf="@+id/ivParrotAdult"
+        app:layout_constraintStart_toEndOf="@+id/ivParrotBaby"
+        app:layout_constraintTop_toBottomOf="@+id/ivDogTeen" />
+
+    <ImageView
+        android:id="@+id/ivParrotAdult"
+        android:layout_width="112dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/locked_petgallery"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivDogAdult" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
