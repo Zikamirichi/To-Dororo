@@ -33,6 +33,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -47,5 +51,6 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     // added dependencies
-    implementation("com.google.android.material:material:1.0.0")
+    implementation("com.google.android.material:material:1.12.0")
+
 }

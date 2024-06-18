@@ -2,15 +2,14 @@ package com.mobdeve.s11and12.group1.to_dororo
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
-
+class PomodoroTimer_Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -26,10 +25,10 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.toDo -> {
+                R.id.pomodoro -> {
                     true // Return true to indicate item selection handled
                 }
-                R.id.pomodoro -> {
+                R.id.toDo -> {
                     startActivity(Intent(applicationContext, PomodoroTimer_Activity::class.java), options.toBundle())
                     finish()
                     true // Return true to indicate item selection handled

@@ -2,21 +2,20 @@ package com.mobdeve.s11and12.group1.to_dororo
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : AppCompatActivity() {
-
+class VirtualPet_Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navbar)
-        bottomNavigationView.selectedItemId = R.id.toDo
+        bottomNavigationView.selectedItemId = R.id.virtualPet
 
         val options = ActivityOptionsCompat.makeCustomAnimation(
             applicationContext,
@@ -26,21 +25,21 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.toDo -> {
-                    true // Return true to indicate item selection handled
-                }
-                R.id.pomodoro -> {
-                    startActivity(Intent(applicationContext, PomodoroTimer_Activity::class.java), options.toBundle())
-                    finish()
-                    true // Return true to indicate item selection handled
-                }
                 R.id.virtualPet -> {
-                    startActivity(Intent(applicationContext, VirtualPet_Activity::class.java), options.toBundle())
+                    true // Return true to indicate item selection handled
+                }
+                R.id.toDo -> {
+                    startActivity(Intent(applicationContext, MainActivity::class.java), options.toBundle())
                     finish()
                     true // Return true to indicate item selection handled
                 }
                 R.id.userProfile -> {
                     startActivity(Intent(applicationContext, UserProfile_Activity::class.java), options.toBundle())
+                    finish()
+                    true // Return true to indicate item selection handled
+                }
+                R.id.pomodoro -> {
+                    startActivity(Intent(applicationContext, PomodoroTimer_Activity::class.java), options.toBundle())
                     finish()
                     true // Return true to indicate item selection handled
                 }

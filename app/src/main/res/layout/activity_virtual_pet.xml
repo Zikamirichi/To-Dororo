@@ -5,8 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".VirtualPet_Activity">
 
+<!--    Just a placeholder, edit CONTENT starting from here-->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,10 +15,11 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="303dp"
         android:layout_marginEnd="118dp"
-        android:text="To-Do List"
+        android:text="Virtual Pet"
         android:textColor="@color/black"
         android:textSize="36sp" />
 
+<!--    For navbar, PLEASE DO NOT EDIT THIS PART-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navbar"
         android:layout_width="match_parent"
