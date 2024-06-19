@@ -1,17 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ToDoListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Container for main content -->
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Content of your ToDo list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Left part: History icon -->
+            <ImageButton
+                android:id="@+id/history_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/history"
+                android:background="@android:color/transparent"
+                android:contentDescription="History Icon"
+                android:onClick="onHistoryIconClick"
+                android:scaleType="centerCrop"
+                android:layout_marginEnd="16dp" />
+
+            <!-- Middle part: To-Do title and heart box -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Black box with heart icon and count -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/rounded_black_background"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:layout_marginBottom="-1dp"> <!-- Adjusted margin to remove space -->
+
+                    <ImageView
+                        android:id="@+id/heart_icon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/heart"
+                        android:contentDescription="Heart Icon"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:id="@+id/heart_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+
+                <!-- Main box with title -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:padding="1dp"
+                    android:background="@drawable/rounded_white_background">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="1dp"
+                        android:background="@android:color/white"
+                        android:padding="8dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="To-Do"
+                            android:textSize="24sp"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:textColor="@android:color/black" />
+                    </FrameLayout>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Right part: Help icon -->
+            <ImageButton
+                android:id="@+id/help_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/help_black"
+                android:background="@android:color/transparent"
+                android:contentDescription="Help Icon"
+                android:onClick="onHelpIconClick"
+                android:scaleType="centerCrop"
+                android:layout_marginStart="16dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Text view for the main content -->
     <TextView
+        android:id="@+id/main_content_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="To-Do List fragment here"
-        android:textColor="@color/black"
+        android:textColor="@android:color/black"
         android:textSize="36sp"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_alignParentTop="true" />
 
-</FrameLayout>
+    <!-- Create button at bottom right -->
+    <ImageButton
+        android:id="@+id/create_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/create"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:contentDescription="Create Button"
+        android:onClick="onCreateButtonClick"
+        android:scaleType="fitCenter" />
+
+</RelativeLayout>
