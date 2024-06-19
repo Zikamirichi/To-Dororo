@@ -109,16 +109,20 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Text view for the main content -->
-    <TextView
-        android:id="@+id/main_content_text"
+    <!-- RecyclerView for ToDo items -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_todo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="To-Do List fragment here"
-        android:textColor="@android:color/black"
-        android:textSize="36sp"
-        android:gravity="center"
-        android:layout_alignParentTop="true" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/content_container"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+    android:background="@android:color/white"
+    android:clipToPadding="false"
+    android:paddingTop="8dp"
+    android:paddingBottom="16dp"
+    android:overScrollMode="always" />
 
     <!-- Create button at bottom right -->
     <ImageButton
