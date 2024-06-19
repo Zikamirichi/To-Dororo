@@ -5,7 +5,110 @@
     android:layout_height="match_parent"
     tools:context=".VirtualPetFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- Container for main content -->
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Content of your ToDo list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Left part: History icon -->
+            <ImageButton
+                android:id="@+id/history_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="History Icon"
+                android:onClick="onHistoryIconClick"
+                android:scaleType="centerCrop"
+                android:src="@drawable/history" />
+
+            <!-- Middle part: title and heart box -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Black box with heart icon and count -->
+                <LinearLayout
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-1dp"
+                    android:background="@drawable/rounded_black_background"
+                    android:orientation="horizontal"
+                    android:padding="8dp"> <!-- Adjusted margin to remove space -->
+
+                    <ImageView
+                        android:id="@+id/heart_icon"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:contentDescription="Heart Icon"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/heart"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="3dp"/>
+
+                    <TextView
+                        android:id="@+id/heart_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/archivo"
+                        android:textAlignment="viewEnd"
+                        android:paddingRight="10dp"
+                        android:text="100"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Main box with title -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/todo_background"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Virtual Pet"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/archivo"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Right part: Help icon -->
+            <ImageButton
+                android:id="@+id/help_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Help Icon"
+                android:onClick="onHelpIconClick"
+                android:scaleType="centerCrop"
+                android:src="@drawable/help_black" />
+        </LinearLayout>
+    </LinearLayout>
+
+<!--    START OF VIRTUAL PET CONTENT-->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
