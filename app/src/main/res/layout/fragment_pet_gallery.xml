@@ -188,7 +188,8 @@
             android:paddingBottom="2dp"
             android:text="10000"
             android:textAlignment="textEnd"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:textColor="@color/black"/>
 
         <ImageView
             android:id="@+id/ivHeartsUserGallery"

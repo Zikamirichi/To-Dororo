@@ -1,0 +1,124 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/help_layout"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/red"
+    tools:context=".HelpFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivAppLogoHelp"
+            android:layout_width="148dp"
+            android:layout_height="149dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="48dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/app_logo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tvTodororo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/gothic_a1_black"
+            android:text="To-Dororo"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivAppLogoHelp"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/vLine"
+            android:layout_width="226dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTodororo" />
+
+        <TextView
+            android:id="@+id/tvHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/gothic_a1_medium"
+            android:text="Help"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/vLine"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ImageView
+            android:id="@+id/ivHelpWhite"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="28dp"
+            android:src="@drawable/help_white"
+            app:layout_constraintStart_toEndOf="@+id/tvHelp"
+            app:layout_constraintTop_toBottomOf="@+id/vLine" />
+
+        <ScrollView
+            android:layout_width="247dp"
+            android:layout_height="378dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginRight="12dp"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.509"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvHelp"
+            app:layout_constraintVertical_bias="0.0" >
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvHelpContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/gothic_a1_medium"
+                    android:lineSpacingExtra="4sp"
+                    android:text="The Pomodoro Technique, developed by Francesco Cirillo in the late 1980s, enhances productivity by breaking work into 25-minute intervals separated by short breaks. Users focus intensely during each session, then take a brief rest. After four sessions, a longer break is taken. This method helps manage distractions and maintain concentration.
+                        \n\nOur application combines the Pomodoro Technique with a motivational twist—pet rewards. Here's how it works:
+                            \n\n    - Task Management: List tasks by today, tomorrow, or other specific dates.
+                            \n\n    - Pomodoro Timer: Start sessions from your to-do list; track work time with short or long breaks.
+                            \n\n    - Motivational Rewards: Earn points by completing tasks to care for virtual pets.
+                            \n\n    - Pet Care: Choose from various pets, and watch them grow; enhance care with productivity.
+                            \n\n    - Progress Tracking: View how long did you take for each task to be marked as done
+
+                            \n\nBy merging the Pomodoro Technique with task management and pet rewards, our app boosts productivity and makes work engaging. Start today for a more efficient and rewarding approach to task management."
+                    android:textAlignment="textStart"
+                    android:textColor="@color/white" />
+                </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
+
