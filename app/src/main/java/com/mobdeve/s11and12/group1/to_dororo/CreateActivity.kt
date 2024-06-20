@@ -26,10 +26,16 @@ class CreateActivity : AppCompatActivity() {
         setTimerTextView = findViewById(R.id.set_timer_text)
         totalTextView = findViewById(R.id.total_time_text)
         val helpButton = findViewById<ImageButton>(R.id.help_icon)
+        val historyButton = findViewById<ImageButton>(R.id.history_icon)
 
         // Set initial date to today
         calendar = Calendar.getInstance()
         updateDateText(calendar.time)
+
+        // For History Button
+        historyButton.setOnClickListener {
+            startActivity(Intent(this@CreateActivity, HistoryActivity::class.java))
+        }
 
         // Help button click listener
         helpButton.setOnClickListener {
