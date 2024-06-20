@@ -118,7 +118,7 @@
         android:id="@+id/tvHeartsUserGallery"
         android:layout_width="239dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="136dp"
+        android:layout_marginTop="184dp"
         android:background="@drawable/user_hearts_box"
         android:fontFamily="@font/archivo"
         android:paddingLeft="27dp"
@@ -129,10 +129,9 @@
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="17sp"
-        app:layout_constraintTop_toTopOf="@+id/content_container"
-        tools:layout_editor_absoluteX="86dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="@+id/content_container" />
 
     <ImageView
         android:id="@+id/ivHeartsUserGallery"
