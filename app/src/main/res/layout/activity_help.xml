@@ -80,24 +80,25 @@
             app:layout_constraintTop_toBottomOf="@+id/vLine" />
 
         <ScrollView
-            android:layout_width="247dp"
-            android:layout_height="378dp"
+            android:layout_width="232dp"
+            android:layout_height="0dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="24dp"
             android:layout_marginRight="12dp"
+            android:layout_marginBottom="20dp"
             android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.509"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvHelp"
-            app:layout_constraintVertical_bias="0.0" >
+            app:layout_constraintVertical_bias="0.0">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
 
                 <TextView
                     android:id="@+id/tvHelpContent"
