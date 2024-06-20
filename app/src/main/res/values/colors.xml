@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FB3C24</color>
     <color name="grey">#D9D9D9</color>
+    <color name="divider_color">#000000</color> <!-- Black color, adjust as needed -->
 </resources>
