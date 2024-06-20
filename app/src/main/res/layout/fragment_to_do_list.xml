@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,10 +10,13 @@
     <!-- Container for main content -->
     <LinearLayout
         android:id="@+id/content_container"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Content of your ToDo list -->
         <LinearLayout
@@ -37,13 +42,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="center_vertical"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
                 <!-- Black box with heart icon and count -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:background="@drawable/rounded_black_background"
@@ -63,25 +67,29 @@
                         android:id="@+id/heart_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="10000"
                         android:textSize="16sp"
                         android:textColor="@android:color/white"
                         android:layout_marginStart="8dp" />
                 </LinearLayout>
 
                 <!-- Main box with title -->
-                <FrameLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:padding="1dp"
-                    android:background="@drawable/rounded_white_background">
+                    android:background="@drawable/rounded_white_background"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="1dp"
                         android:background="@android:color/white"
-                        android:padding="8dp">
+                        android:padding="8dp"
+                        android:orientation="vertical"
+                        android:gravity="center">
 
                         <TextView
                             android:layout_width="match_parent"
@@ -91,8 +99,8 @@
                             android:fontFamily="sans-serif"
                             android:gravity="center"
                             android:textColor="@android:color/black" />
-                    </FrameLayout>
-                </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Right part: Help icon -->
@@ -112,17 +120,20 @@
     <!-- RecyclerView for ToDo items -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_todo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/content_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-    android:background="@android:color/white"
-    android:clipToPadding="false"
-    android:paddingTop="8dp"
-    android:paddingBottom="16dp"
-    android:overScrollMode="always" />
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:overScrollMode="always"
+        app:layout_constraintTop_toBottomOf="@id/content_container"
+        app:layout_constraintBottom_toTopOf="@id/create_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Create button at bottom right -->
     <ImageButton
@@ -131,11 +142,11 @@
         android:layout_height="50dp"
         android:src="@drawable/create"
         android:background="@android:color/transparent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:contentDescription="Create Button"
         android:onClick="onCreateButtonClick"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
