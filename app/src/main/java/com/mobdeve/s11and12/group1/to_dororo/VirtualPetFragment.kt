@@ -8,23 +8,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import com.mobdeve.s11and12.group1.to_dororo.HelpActivity
+import com.mobdeve.s11and12.group1.to_dororo.PetShopActivity
 
 class VirtualPetFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_virtual_pet, container, false)
 
-        // Find the help_icon ImageButton
-        val helpIcon = view.findViewById<ImageButton>(R.id.help_icon)
-
-        // Set OnClickListener for help_icon
-        helpIcon.setOnClickListener {
-            // Start HelpActivity
+        // For Help button
+        val helpView = view.findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
             startActivity(Intent(requireContext(), HelpActivity::class.java))
         }
+
+        //For Pet Shop button
+        val storeView = view.findViewById<ImageButton>(R.id.ibPetShop)
+        storeView.setOnClickListener {
+            startActivity(Intent(requireContext(), PetShopActivity::class.java))
+        }
+
+        //For Pet Gallery button
+        val galleryView = view.findViewById<ImageButton>(R.id.ibGallery)
+        galleryView.setOnClickListener {
+            startActivity(Intent(requireContext(), PetGalleryActivity::class.java))
+        }
+
 
         return view
     }

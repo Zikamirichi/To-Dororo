@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".PetShopFragment">
+    tools:context=".PetShopActivity">
 
     <TextView
         android:id="@+id/tvPetshop"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvPetshop"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/gothic_a1_black"
         android:text="Cat"
         android:textColor="#000000"
@@ -42,7 +42,6 @@
         android:layout_below="@+id/tvCatPetShop"
         android:layout_alignParentStart="true"
         android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
         android:layout_marginTop="2dp"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
@@ -77,8 +76,9 @@
         android:id="@+id/tvDogPetShop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="80dp"
+        android:layout_below="@+id/tvPetshop"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@+id/tvCatPetShop"
         android:fontFamily="@font/gothic_a1_black"
         android:text="Dog"
@@ -90,10 +90,11 @@
         android:id="@+id/ibBuyDog"
         android:layout_width="169dp"
         android:layout_height="187dp"
+        android:layout_below="@+id/tvDogPetShop"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="34dp"
         android:layout_toEndOf="@+id/ibBuyCat"
         android:background="@android:color/transparent"
         android:scaleType="centerCrop"
@@ -123,7 +124,7 @@
         android:textSize="15sp"
         android:textStyle="normal" />
 
-<!--    start of parrot-->
+    <!--    start of parrot-->
 
     <TextView
         android:id="@+id/tvParrotPetShop"
@@ -175,7 +176,7 @@
         android:textSize="15sp"
         android:textStyle="normal" />
 
-<!--    coming soon-->
+    <!--    coming soon-->
 
     <TextView
         android:id="@+id/tvComingPetShop"
