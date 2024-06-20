@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <!-- Content of your ToDo list -->
         <LinearLayout
@@ -110,161 +113,174 @@
     </LinearLayout>
 
 <!--    START OF VIRTUAL PET CONTENT-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvHeartsUserGallery"
-            android:layout_width="239dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="140dp"
-            android:background="@drawable/user_hearts_box"
-            android:fontFamily="@font/archivo"
-            android:paddingLeft="27dp"
-            android:paddingTop="4dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="4dp"
-            android:text="100 / 1000"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="17sp" />
+    <TextView
+        android:id="@+id/tvHeartsUserGallery"
+        android:layout_width="239dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="136dp"
+        android:background="@drawable/user_hearts_box"
+        android:fontFamily="@font/archivo"
+        android:paddingLeft="27dp"
+        android:paddingTop="4dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="4dp"
+        android:text="100 / 1000"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintTop_toTopOf="@+id/content_container"
+        tools:layout_editor_absoluteX="86dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <ImageView
-            android:id="@+id/ivHeartsUserGallery"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignStart="@+id/tvHeartsUserGallery"
-            android:layout_alignTop="@+id/tvHeartsUserGallery"
-            android:layout_marginStart="34dp"
-            android:layout_marginTop="6dp"
-            android:src="@drawable/heart" />
+    <ImageView
+        android:id="@+id/ivHeartsUserGallery"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/heart"
+        app:layout_constraintStart_toStartOf="@+id/tvHeartsUserGallery"
+        app:layout_constraintTop_toTopOf="@+id/tvHeartsUserGallery" />
 
-        <ImageView
-            android:id="@+id/ivPet01"
-            android:layout_width="257dp"
-            android:layout_height="277dp"
-            android:layout_below="@+id/tvHeartsUserGallery"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/parrot_teen" />
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content">-->
 
-        <ImageButton
-            android:id="@+id/ibLeft_button"
-            android:layout_width="33dp"
-            android:layout_height="50dp"
-            android:layout_alignTop="@+id/ivPet01"
-            android:layout_alignBottom="@+id/ivPet01"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="108dp"
-            android:layout_marginEnd="21dp"
-            android:layout_marginBottom="119dp"
-            android:layout_toStartOf="@+id/ivPet01"
-            android:background="@android:color/transparent"
-            android:padding="1dp"
-            android:scaleType="centerCrop"
-            android:layout_centerInParent="true"
-            android:src="@drawable/left_button" />
+    <ImageView
+        android:id="@+id/ivPet01"
+        android:layout_width="257dp"
+        android:layout_height="277dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/parrot_teen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeartsUserGallery" />
 
-        <ImageButton
-            android:id="@+id/ibRight_button"
-            android:layout_width="33dp"
-            android:layout_height="50dp"
-            android:layout_alignTop="@+id/ivPet01"
-            android:layout_alignBottom="@+id/ivPet01"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="113dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="114dp"
-            android:layout_toEndOf="@+id/ivPet01"
-            android:background="@android:color/transparent"
-            android:padding="1dp"
-            android:scaleType="centerCrop"
-            android:layout_centerInParent="true"
-            android:src="@drawable/right_button" />
+    <ImageButton
+        android:id="@+id/ibLeft_button"
+        android:layout_width="33dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/ivPet01"
+        android:layout_alignBottom="@+id/ivPet01"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="23dp"
+        android:layout_toStartOf="@+id/ivPet01"
+        android:background="@android:color/transparent"
+        android:padding="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/left_button"
+        app:layout_constraintEnd_toStartOf="@+id/ivPet01"
+        app:layout_constraintTop_toTopOf="@+id/ivPet01" />
 
-        <ImageButton
-            android:id="@+id/ibFeed_button"
-            android:layout_width="137dp"
-            android:layout_height="73dp"
-            android:layout_below="@+id/ivPet01"
-            android:layout_marginStart="38dp"
-            android:layout_marginTop="37dp"
-            android:layout_marginEnd="38dp"
-            android:layout_toStartOf="@+id/ibGallery"
-            android:layout_toEndOf="@+id/ibPetShop"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/feed_100" />
+    <ImageButton
+        android:id="@+id/ibRight_button"
+        android:layout_width="33dp"
+        android:layout_height="50dp"
+        android:layout_alignTop="@+id/ivPet01"
+        android:layout_alignBottom="@+id/ivPet01"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="112dp"
+        android:layout_toEndOf="@+id/ivPet01"
+        android:background="@android:color/transparent"
+        android:padding="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/right_button"
+        app:layout_constraintStart_toEndOf="@+id/ivPet01"
+        app:layout_constraintTop_toTopOf="@+id/ivPet01" />
 
-        <TextView
-            android:id="@+id/tvFeed"
-            android:layout_width="37dp"
-            android:layout_height="23dp"
-            android:layout_below="@+id/ibFeed_button"
-            android:layout_marginTop="1dp"
-            android:fontFamily="@font/gothic_a1_black"
-            android:text="Feed"
-            android:textAlignment="center"
-            android:layout_centerInParent="true"
-            android:textColor="@color/black" />
+    <ImageButton
+        android:id="@+id/ibFeed_button"
+        android:layout_width="129dp"
+        android:layout_height="68dp"
+        android:layout_below="@+id/ivPet01"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/feed_100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivPet01"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-        <ImageButton
-            android:id="@+id/ibPetShop"
-            android:layout_width="52dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/ivPet01"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="47dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pet_store" />
+    <TextView
+        android:id="@+id/tvFeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ibFeed_button"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Feed"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/ibFeed_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/tvShop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ibPetShop"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="322dp"
-            android:layout_toStartOf="@+id/tvFeed"
-            android:fontFamily="@font/gothic_a1_black"
-            android:text="Shop"
-            android:textColor="@color/black" />
+    <ImageButton
+        android:id="@+id/ibPetShop"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_below="@+id/ivPet01"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pet_store"
+        app:layout_constraintEnd_toStartOf="@+id/ibFeed_button"
+        app:layout_constraintTop_toBottomOf="@+id/ivPet01"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-        <ImageButton
-            android:id="@+id/ibGallery"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_below="@+id/ivPet01"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="48dp"
-            android:layout_marginEnd="44dp"
-            android:background="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/gallery" />
+    <TextView
+        android:id="@+id/tvShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ibPetShop"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="94dp"
+        android:layout_toStartOf="@+id/tvFeed"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Shop"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintEnd_toStartOf="@+id/tvFeed"
+        app:layout_constraintTop_toBottomOf="@+id/ibPetShop"/>
 
-        <TextView
-            android:id="@+id/tvGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ibGallery"
-            android:layout_marginStart="95dp"
-            android:layout_marginTop="11dp"
-            android:layout_toEndOf="@+id/tvFeed"
-            android:fontFamily="@font/gothic_a1_black"
-            android:text="Gallery"
-            android:textColor="@color/black" />
+    <ImageButton
+        android:id="@+id/ibGallery"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/ivPet01"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gallery"
+        app:layout_constraintStart_toEndOf="@+id/ibFeed_button"
+        app:layout_constraintTop_toBottomOf="@+id/ivPet01"
+        app:layout_constraintVertical_chainStyle="packed" />
 
-
-    </RelativeLayout>
-
-
-</FrameLayout>
+    <TextView
+        android:id="@+id/tvGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ibGallery"
+        android:layout_marginStart="84dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/gothic_a1_black"
+        android:text="Gallery"
+        android:textColor="@color/black"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/tvFeed"
+        app:layout_constraintTop_toBottomOf="@+id/ibGallery" />
+</androidx.constraintlayout.widget.ConstraintLayout>
