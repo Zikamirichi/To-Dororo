@@ -10,7 +10,7 @@
     <!-- Container for main content -->
     <LinearLayout
         android:id="@+id/content_container"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
@@ -30,77 +30,72 @@
                 android:id="@+id/history_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/history"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="History Icon"
                 android:onClick="onHistoryIconClick"
                 android:scaleType="centerCrop"
-                android:layout_marginEnd="16dp" />
+                android:src="@drawable/history" />
 
-            <!-- Middle part: To-Do title and heart box -->
+            <!-- Middle part: title and heart box -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="center_vertical"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
                 <!-- Black box with heart icon and count -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="133dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginBottom="-1dp"
                     android:background="@drawable/rounded_black_background"
-                    android:padding="8dp"
-                    android:gravity="center"
-                    android:layout_marginBottom="-1dp"> <!-- Adjusted margin to remove space -->
+                    android:orientation="horizontal"
+                    android:padding="8dp"> <!-- Adjusted margin to remove space -->
 
                     <ImageView
                         android:id="@+id/heart_icon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/heart"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
                         android:contentDescription="Heart Icon"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/heart"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="3dp"/>
 
                     <TextView
                         android:id="@+id/heart_count"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="10000"
-                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/archivo"
+                        android:textAlignment="viewEnd"
+                        android:paddingRight="10dp"
+                        android:text="100"
                         android:textColor="@android:color/white"
-                        android:layout_marginStart="8dp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <!-- Main box with title -->
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:padding="1dp"
-                    android:background="@drawable/rounded_white_background"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/todo_background"
+                    android:padding="8dp">
 
-                    <LinearLayout
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="1dp"
-                        android:background="@android:color/white"
-                        android:padding="8dp"
-                        android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text="To-Do"
-                            android:textSize="24sp"
-                            android:fontFamily="sans-serif"
-                            android:gravity="center"
-                            android:textColor="@android:color/black" />
-                    </LinearLayout>
-                </LinearLayout>
+                        android:text="To-Do"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/archivo"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Right part: Help icon -->
@@ -108,12 +103,13 @@
                 android:id="@+id/help_icon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/help_black"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
                 android:background="@android:color/transparent"
                 android:contentDescription="Help Icon"
                 android:onClick="onHelpIconClick"
                 android:scaleType="centerCrop"
-                android:layout_marginStart="16dp" />
+                android:src="@drawable/help_black" />
         </LinearLayout>
     </LinearLayout>
 
@@ -140,13 +136,14 @@
         android:id="@+id/create_button"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/create"
-        android:background="@android:color/transparent"
+        android:layout_gravity="bottom"
         android:layout_margin="16dp"
-        android:contentDescription="Create Button"
+        android:background="@android:color/transparent"
+        android:contentDescription="Create Icon"
         android:onClick="onCreateButtonClick"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/create" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

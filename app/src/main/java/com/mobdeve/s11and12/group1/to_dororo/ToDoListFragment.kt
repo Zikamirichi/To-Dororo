@@ -1,9 +1,11 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,14 +32,25 @@ class ToDoListFragment : Fragment() {
             TodoItem("Task 4", 1, "Tomorrow", false),
             TodoItem("Task 5", 4, "Specific Date", true),
             TodoItem("Task 6", 2, "Specific Date", false),
-            TodoItem("Task 6", 2, "Specific Date", false),
-            TodoItem("Task 6", 2, "Specific Date", false),
-            TodoItem("Task 6", 2, "Specific Date", false)
+            TodoItem("Task 7", 2, "Specific Date", false),
+            TodoItem("Task 8", 2, "Specific Date", false)
             // Add more as needed
         )
 
         adapter = TodoAdapter(todoList)
         recyclerView.adapter = adapter
+
+        // For Help button
+        val helpView = view.findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
+            startActivity(Intent(requireContext(), HelpActivity::class.java))
+        }
+
+        // For Create button
+        val createView = view.findViewById<ImageButton>(R.id.create_button)
+        createView.setOnClickListener {
+            startActivity(Intent(requireContext(), CreateActivity::class.java))
+        }
 
         return view
     }
