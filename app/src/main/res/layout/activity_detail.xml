@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Container for main content -->
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Content of your ToDo list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Left part: History icon -->
+            <ImageButton
+                android:id="@+id/history_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="History Icon"
+                android:scaleType="centerCrop"
+                android:src="@drawable/history" />
+
+            <!-- Middle part: title and heart box -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <!-- Black box with heart icon and count -->
+                <LinearLayout
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-1dp"
+                    android:background="@drawable/rounded_black_background"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/heart_icon"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:contentDescription="Heart Icon"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/heart"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="3dp"/>
+
+                    <TextView
+                        android:id="@+id/heart_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/archivo"
+                        android:textAlignment="viewEnd"
+                        android:paddingRight="10dp"
+                        android:text="100"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Main box with title -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/todo_background"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="To-Do"
+                        android:textSize="24sp"
+                        android:fontFamily="@font/archivo"
+                        android:gravity="center"
+                        android:textColor="@android:color/black" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Right part: Help icon -->
+            <ImageButton
+                android:id="@+id/help_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Help Icon"
+                android:scaleType="centerCrop"
+                android:src="@drawable/help_black" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Body section -->
+    <LinearLayout
+        android:id="@+id/body_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/content_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Content of your ToDo list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#F4F4F4"
+            android:padding="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+            <!-- Middle part: Title of the to-do list -->
+            <TextView
+                android:id="@+id/todo_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Task Title"
+                android:textSize="18sp"
+                android:fontFamily="@font/archivo"
+                android:textColor="@android:color/black"
+                android:gravity="center" />
+
+            <!-- Right part: Delete button -->
+            <ImageButton
+                android:id="@+id/delete_button"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="bottom"
+                android:background="@android:color/transparent"
+                android:contentDescription="Delete Button"
+                android:scaleType="fitCenter"
+                android:src="@drawable/delete" />
+        </LinearLayout>
+
+        <!-- Date section -->
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: Today"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:onClick="showDatePicker" />
+
+        <!-- Set timer and Total section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
+
+            <!-- Set timer section -->
+            <TextView
+                android:id="@+id/set_timer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set timer"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="sans-serif-medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="onSetTimerClicked"
+                android:layout_marginEnd="16dp"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="4dp" />
+
+            <!-- Spacer view -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Total time section -->
+            <TextView
+                android:id="@+id/total_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total: 45 m 34s"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:fontFamily="sans-serif-medium"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
+
+        <!-- Divider line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#A6A6A6"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"/>
+
+        <!-- Note section -->
+        <TextView
+            android:id="@+id/note_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Note"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Text box -->
+        <EditText
+            android:id="@+id/note_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:hint="Insert text here..."
+            android:inputType="textMultiLine"
+            android:gravity="start"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            android:background="@null"/>
+    </LinearLayout>
+
+    <!-- Save button at the bottom -->
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Save"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_background"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

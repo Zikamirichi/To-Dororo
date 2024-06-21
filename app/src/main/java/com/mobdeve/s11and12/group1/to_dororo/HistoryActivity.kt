@@ -10,8 +10,8 @@ import android.widget.Button
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var taskAdapter: TaskAdapter
-    private lateinit var taskList: MutableList<Task>
+    private lateinit var historyTaskAdapter: HistoryTaskAdapter
+    private lateinit var taskList: MutableList<HistoryTask>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,17 +21,17 @@ class HistoryActivity : AppCompatActivity() {
         val clearButton: Button = findViewById(R.id.clear_button)
 
         taskList = mutableListOf(
-            Task("Completed Task 1"),
-            Task("Completed Task 2"),
-            Task("Completed Task 3")
+            HistoryTask("Completed Task 1"),
+            HistoryTask("Completed Task 2"),
+            HistoryTask("Completed Task 3")
         )
 
-        taskAdapter = TaskAdapter(taskList)
+        historyTaskAdapter = HistoryTaskAdapter(this, taskList)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = taskAdapter
+        recyclerView.adapter = historyTaskAdapter
 
         clearButton.setOnClickListener {
-            taskAdapter.clearTasks()
+            historyTaskAdapter.clearTasks()
         }
     }
 }
