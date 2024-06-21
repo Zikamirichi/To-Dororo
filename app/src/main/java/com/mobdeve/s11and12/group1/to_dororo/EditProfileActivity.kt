@@ -18,17 +18,23 @@ class EditProfileActivity : AppCompatActivity() {
         cancel1 = findViewById(R.id.cancel_edit_profile)
 
         saveInfoButton.setOnClickListener {
-            replaceFragment(UserProfileFragment())
+            // Perform save actions here if needed
+            // Example: saveChanges()
+
+            // Finish this activity to return to UserProfileFragment
+            finish()
+
         }
 
         cancel1.setOnClickListener {
-            replaceFragment(UserProfileFragment())
+            finish()
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.user_profile, fragment)
-            .commit()
-    }
+    // DON'T NEED THIS
+//    private fun replaceFragment(fragment: Fragment) {
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.user_profile, fragment)
+//            .commit()
+//    }
 }
