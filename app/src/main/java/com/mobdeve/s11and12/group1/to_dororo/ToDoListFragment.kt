@@ -26,14 +26,14 @@ class ToDoListFragment : Fragment() {
 
         // Dummy data for demonstration
         val todoList = mutableListOf(
-            TodoItem("Task 1", 3, "Today", true),
-            TodoItem("Task 2", 5, "Today", false),
-            TodoItem("Task 3", 2, "Tomorrow", true),
-            TodoItem("Task 4", 1, "Tomorrow", false),
-            TodoItem("Task 5", 4, "Specific Date", true),
-            TodoItem("Task 6", 2, "Specific Date", false),
-            TodoItem("Task 7", 2, "Specific Date", false),
-            TodoItem("Task 8", 2, "Specific Date", false)
+            TodoItem("Task 1", "Today", true), // Date header for "Today"
+            TodoItem("Task 2", "Today"),
+            TodoItem("Task 3", "Tomorrow", true), // Date header for "Tomorrow"
+            TodoItem("Task 4", "Tomorrow"),
+            TodoItem("Task 5", "Specific Date", true), // Date header for "Specific Date"
+            TodoItem("Task 6", "Specific Date"),
+            TodoItem("Task 7", "Specific Date"),
+            TodoItem("Task 8", "Specific Date")
             // Add more as needed
         )
 
