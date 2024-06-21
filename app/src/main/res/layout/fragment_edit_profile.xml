@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/edit_text_background">
+    <!-- Container for main content -->
+
+    <LinearLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Content of your ToDo list -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Left part: History icon -->
+            <ImageButton
+                android:id="@+id/history_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="History Icon"
+                android:onClick="onHistoryIconClick"
+                android:scaleType="centerCrop"
+                android:src="@drawable/history" />
+
+            <!-- Middle part: title and heart box -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <!-- Black box with heart icon and count -->
+                <LinearLayout
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-1dp"
+                    android:background="@drawable/rounded_black_background"
+                    android:orientation="horizontal"
+                    android:padding="8dp"> <!-- Adjusted margin to remove space -->
+
+                    <ImageView
+                        android:id="@+id/heart_icon"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="3dp"
+                        android:contentDescription="Heart Icon"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/heart" />
+
+                    <TextView
+                        android:id="@+id/heart_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="@font/archivo"
+                        android:paddingRight="10dp"
+                        android:text="100"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Main box with title -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="1dp"
+                    android:background="@drawable/todo_background"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/archivo"
+                        android:gravity="center"
+                        android:text="Profile"
+                        android:textColor="@android:color/black"
+                        android:textSize="24sp" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- Right part: Help icon -->
+            <ImageButton
+                android:id="@+id/help_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="Help Icon"
+                android:onClick="onHelpIconClick"
+                android:scaleType="centerCrop"
+                android:src="@drawable/help_black" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/edit_profile_display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="249dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Edit Profile"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content_container" />
+
+    <TextView
+        android:id="@+id/cancel_edit_profile"
+        android:layout_width="72dp"
+        android:layout_height="52dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="5dp"
+        android:text="@string/cancel_edit_profile"
+        android:textColor="#ff000000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/content_container" />
+
+    <TextView
+        android:id="@+id/name_display"
+        android:layout_width="325dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/edit_text_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Name"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cancel_edit_profile" />
+
+    <EditText
+        android:id="@+id/name_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="110dp"
+        android:hint="Userbot"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/name_display"
+        app:layout_constraintEnd_toEndOf="@+id/name_display"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/name_display"
+        app:layout_constraintTop_toTopOf="@+id/name_display" />
+
+    <TextView
+        android:id="@+id/username_display"
+        android:layout_width="325dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="43dp"
+        android:background="@drawable/edit_text_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Username"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_display" />
+
+    <EditText
+        android:id="@+id/username_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="110dp"
+        android:hint="User121"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/username_display"
+        app:layout_constraintEnd_toEndOf="@+id/username_display"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/username_display"
+        app:layout_constraintTop_toTopOf="@+id/username_display"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <TextView
+        android:id="@+id/email_display"
+        android:layout_width="325dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="43dp"
+        android:background="@drawable/edit_text_background"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="Email"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_display" />
+
+    <EditText
+        android:id="@+id/email_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="110dp"
+        android:hint="User01@gmail.com"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/email_display"
+        app:layout_constraintEnd_toEndOf="@+id/email_display"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/email_display"
+        app:layout_constraintTop_toTopOf="@+id/email_display"
+        app:layout_constraintVertical_bias="0.50" />
+
+    <Button
+        android:id="@+id/save_profile_button"
+        android:layout_width="155dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="128dp"
+        android:backgroundTint="#00BE63"
+        android:text="SAVE"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_display" />
+</androidx.constraintlayout.widget.ConstraintLayout>
