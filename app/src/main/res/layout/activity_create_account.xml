@@ -7,39 +7,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="159dp"
-        android:layout_height="173dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="106dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.863"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/app_logo" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="652dp"
-        android:fontFamily="sans-serif-black"
-        android:text="Create an account"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:id="@+id/logo_title"
-        android:layout_width="159dp"
-        android:layout_height="53dp"
+        android:layout_width="128dp"
+        android:layout_height="36dp"
         android:layout_marginStart="126dp"
         android:layout_marginEnd="126dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="24dp"
         android:fontFamily="@font/gothic_a1_black"
         android:gravity="center"
         android:paddingTop="0dp"
@@ -48,26 +22,89 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.461"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="158dp"
+        android:layout_height="156dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/logo_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.177"
+        app:srcCompat="@drawable/app_logo" />
+
+    <TextView
+        android:id="@+id/login_text"
+        android:layout_width="56dp"
+        android:layout_height="33dp"
+        android:layout_below="@id/password"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="5dp"
+        android:text="@string/login"
+        android:textColor="#ff000000"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/yes_account"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
+
+    <TextView
+        android:id="@+id/password_mismatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="184dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/password_mismatch"
+        android:textColor="#F80000"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/name"
+    <Button
+        android:id="@+id/sign_up_button"
         android:layout_width="325dp"
         android:layout_height="50dp"
         android:layout_marginStart="43dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginBottom="36dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="Name"
-        android:inputType="text"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/username"
+        android:backgroundTint="#000000"
+        android:text="SIGN UP"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tac_box" />
+
+    <CheckBox
+        android:id="@+id/tac_box"
+        android:layout_width="325dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="128dp"
+        android:text="@string/tac_box"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/invalid_charlength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="256dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/invalid_charlength"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/username"
@@ -75,15 +112,61 @@
         android:layout_height="50dp"
         android:layout_marginStart="43dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginBottom="23dp"
+        android:layout_marginBottom="28dp"
         android:background="@drawable/edit_text_background"
         android:hint="Username"
         android:inputType="text"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/Email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/yes_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="44dp"
+        android:fontFamily="sans-serif"
+        android:text="@string/yes_account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
+
+    <EditText
+        android:id="@+id/confirm_password"
+        android:layout_width="325dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Confirm Password"
+        android:inputType="text"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/password_mismatch"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invalid_charlength"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="556dp"
+        android:fontFamily="sans-serif-black"
+        android:text="Create an account"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/name" />
 
     <EditText
         android:id="@+id/Email"
@@ -91,27 +174,14 @@
         android:layout_height="50dp"
         android:layout_marginStart="43dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginBottom="2dp"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/edit_text_background"
         android:hint="Email"
         android:inputType="text"
         android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/invalid_email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/invalid_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="428dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/invalid_email"
-        android:textColor="#F80000"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -130,99 +200,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invalid_email" />
-
-    <EditText
-        android:id="@+id/confirm_password"
-        android:layout_width="325dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="Confirm Password"
-        android:inputType="text"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/password_mismatch"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invalid_charlength" />
+        app:layout_constraintTop_toBottomOf="@+id/invalid_email"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/invalid_charlength"
+        android:id="@+id/invalid_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="355dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="332dp"
         android:fontFamily="sans-serif"
-        android:text="@string/invalid_charlength"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/password_mismatch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginBottom="282dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/password_mismatch"
+        android:text="@string/invalid_email"
         android:textColor="#F80000"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <CheckBox
-        android:id="@+id/tac_box"
-        android:layout_width="325dp"
-        android:layout_height="77dp"
-        android:layout_marginStart="43dp"
-        android:layout_marginBottom="224dp"
-        android:text="@string/tac_box"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/login_text"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_below="@id/password"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="110dp"
-        android:layout_marginBottom="116dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="5dp"
-        android:text="@string/login"
-        android:textColor="#ff000000"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/sign_up_button"
+    <EditText
+        android:id="@+id/name"
         android:layout_width="325dp"
         android:layout_height="50dp"
         android:layout_marginStart="43dp"
+        android:layout_marginTop="18dp"
         android:layout_marginEnd="43dp"
-        android:backgroundTint="#000000"
-        android:text="SIGN UP"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Name"
+        android:inputType="text"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/username"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tac_box" />
-
-    <TextView
-        android:id="@+id/yes_account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="90dp"
-        android:layout_marginBottom="140dp"
-        android:fontFamily="sans-serif"
-        android:text="@string/yes_account"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.571" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
