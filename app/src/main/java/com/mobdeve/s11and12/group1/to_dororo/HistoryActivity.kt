@@ -21,9 +21,9 @@ class HistoryActivity : AppCompatActivity() {
         val clearButton: Button = findViewById(R.id.clear_button)
 
         taskList = mutableListOf(
-            HistoryTask("Completed Task 1"),
-            HistoryTask("Completed Task 2"),
-            HistoryTask("Completed Task 3")
+            HistoryTask("Completed Task 1", "Today", true),
+            HistoryTask("Completed Task 2", "Tomorrow", true),
+            HistoryTask("Completed Task 3", "Specific Date", true),
         )
 
         historyTaskAdapter = HistoryTaskAdapter(this, taskList)
