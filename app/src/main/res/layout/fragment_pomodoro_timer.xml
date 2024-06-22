@@ -6,8 +6,6 @@
     tools:context=".PomodoroTimerFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <?xml version="1.0" encoding="utf-8"?>
-
         <!-- Container for main content -->
         <LinearLayout
             android:id="@+id/content_container"
