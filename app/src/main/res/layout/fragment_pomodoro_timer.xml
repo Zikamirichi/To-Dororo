@@ -117,7 +117,7 @@
         android:id="@+id/timer_text"
         android:layout_width="395dp"
         android:layout_height="154dp"
-        android:layout_marginBottom="488dp"
+        android:layout_marginTop="37dp"
         android:background="@drawable/pomodoro_clock"
         android:ems="10"
         android:fontFamily="@font/archivo"
@@ -125,10 +125,10 @@
         android:text="25:00"
         android:textColor="@color/white"
         android:textSize="96sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activity_button" />
 
     <Button
         android:id="@+id/pomodoro_button"
