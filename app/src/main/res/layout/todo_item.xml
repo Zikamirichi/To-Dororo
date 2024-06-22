@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -7,41 +7,55 @@
     android:padding="16dp">
 
     <!-- Separator line -->
+
+    <!-- Date header -->
     <View
         android:id="@+id/separator_line"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/black" />
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
-    <!-- Date header -->
+    <!-- Task Title -->
+
     <TextView
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/separator_line"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-light"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="normal"
-        android:fontFamily="sans-serif-light"
-        android:textAlignment="center" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/separator_line"
+        app:layout_constraintVertical_bias="0.146" />
 
-    <!-- Task Title -->
-    <!-- Task Title - Make it clickable -->
     <Button
-        android:id="@+id/btn_task_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_date"
-        android:layout_marginTop="8dp"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@android:color/white"
-        android:gravity="start|center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp" />
+        android:id="@+id/activity_button"
+        android:layout_width="325dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/tasks_outline"
+        android:backgroundTint="@color/white"
+        android:text="Select Task"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        app:cornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

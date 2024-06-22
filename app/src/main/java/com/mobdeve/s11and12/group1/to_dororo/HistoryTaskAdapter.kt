@@ -40,7 +40,6 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val activityButton: Button = itemView.findViewById(R.id.activity_button)
-        val designActivityButton: Button = itemView.findViewById(R.id.design_activity_button)
     }
 }
 

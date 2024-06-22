@@ -30,8 +30,8 @@ class TodoAdapter(private val todoItems: List<TodoItem>) : RecyclerView.Adapter<
         }
 
         // Bind title
-        holder.btnTaskTitle.text = currentItem.title
-        holder.btnTaskTitle.setOnClickListener {
+        holder.activityButton.text = currentItem.title
+        holder.activityButton.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, DetailActivity::class.java).apply {
                 putExtra("taskTitle", currentItem.title)
@@ -49,7 +49,7 @@ class TodoAdapter(private val todoItems: List<TodoItem>) : RecyclerView.Adapter<
     // ViewHolder class
     class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textDate: TextView = itemView.findViewById(R.id.text_date)
-        val btnTaskTitle: Button = itemView.findViewById(R.id.btn_task_title)
+        val activityButton: Button = itemView.findViewById(R.id.activity_button)
         val separatorLine: View = itemView.findViewById(R.id.separator_line)
     }
 }
