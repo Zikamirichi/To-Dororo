@@ -22,6 +22,15 @@
             android:name=".HelpActivity"
             android:exported="false" />
         <activity
+            android:name=".CreateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -31,6 +40,20 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".LogInActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".CreateAccountActivity"
+            android:label="Create Account">
+        </activity>
+        <activity android:name=".EditProfileActivity" />
+        <activity android:name=".ChangePassActivity" />
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
