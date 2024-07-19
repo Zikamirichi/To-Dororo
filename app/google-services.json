@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "221984113587",
+    "project_id": "mobdeve-todororo",
+    "storage_bucket": "mobdeve-todororo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221984113587:android:39124030a03b83534dc1c6",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s11and12.group1.to_dororo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTb4v2l4Jy45L-ha3xINHd_3yAL6o5Bco"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
