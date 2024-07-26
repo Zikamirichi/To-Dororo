@@ -89,7 +89,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Virtual Pet"
+                        android:text="Pomodoro Timer"
                         android:textSize="24sp"
                         android:fontFamily="@font/archivo"
                         android:gravity="center"
