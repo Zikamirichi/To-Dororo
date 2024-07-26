@@ -32,6 +32,8 @@
         android:layout_width="21dp"
         android:layout_height="15dp"
         android:layout_below="@id/tvPetType"
+        android:layout_alignStart="@+id/ibBuyPet"
+        android:layout_marginStart="48dp"
         android:layout_marginLeft="90dp"
         android:layout_marginTop="150dp"
         android:src="@drawable/heart" />

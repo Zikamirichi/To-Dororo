@@ -1,5 +1,6 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,20 +13,44 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 
 class VirtualPetFragment : Fragment() {
-    private val pets = listOf(
-        R.drawable.adopt_a_pet,
-        R.drawable.parrot_teen,
-        R.drawable.cat_adult,
-        R.drawable.dog_adult
-    ) // Add your drawable resources here
-
+    private val pets = mutableListOf(R.drawable.adopt_a_pet) // Initially only adopt_a_pet
     private var currentPetIndex = 0
     private lateinit var db: FirebaseFirestore
     private lateinit var heartCountTextView: TextView
     private lateinit var tvHeartsUserGallery: TextView
+    private lateinit var leftButton: ImageButton
+    private lateinit var rightButton: ImageButton
+    private lateinit var petImageView: ImageView
+
+    private val petShopActivityResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == RESULT_OK) {
+                val newPetResId = result.data?.getIntExtra("newPetResId", R.drawable.adopt_a_pet)
+                val petType = result.data?.getStringExtra("petType")
+                if (newPetResId != null && newPetResId != R.drawable.adopt_a_pet) {
+                    val drawableResId = when (petType) {
+                        "Cat" -> R.drawable.cat_baby
+                        "Dog" -> R.drawable.dog_baby
+                        "Parrot" -> R.drawable.parrot_baby
+                        else -> newPetResId
+                    }
+
+                    pets.add(drawableResId)
+                    if (pets.size == 2 && pets[0] == R.drawable.adopt_a_pet) {
+                        pets.removeAt(0) // Remove the adopt_a_pet drawable if another pet is added
+                    }
+                    currentPetIndex = pets.size - 1
+                    petImageView.setImageResource(pets[currentPetIndex])
+                    updateButtonStates()
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +59,16 @@ class VirtualPetFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_virtual_pet, container, false)
 
         // Initialize views
-        val petImageView = view.findViewById<ImageView>(R.id.ivPet01)
-        val leftButton = view.findViewById<ImageButton>(R.id.ibLeft_button)
-        val rightButton = view.findViewById<ImageButton>(R.id.ibRight_button)
+        petImageView = view.findViewById(R.id.ivPet01)
+        leftButton = view.findViewById(R.id.ibLeft_button)
+        rightButton = view.findViewById(R.id.ibRight_button)
         val feedButton = view.findViewById<ImageButton>(R.id.ibFeed_button)
         heartCountTextView = view.findViewById(R.id.heart_count)
         tvHeartsUserGallery = view.findViewById(R.id.tvHeartsUserGallery)
 
         // Set initial pet
         petImageView.setImageResource(pets[currentPetIndex])
+        updateButtonStates()
 
         // Set button click listeners
         leftButton.setOnClickListener { switchPet(-1) }
@@ -63,8 +89,8 @@ class VirtualPetFragment : Fragment() {
 
     private fun switchPet(direction: Int) {
         currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
-        val petImageView = view?.findViewById<ImageView>(R.id.ivPet01)
-        petImageView?.setImageResource(pets[currentPetIndex])
+        petImageView.setImageResource(pets[currentPetIndex])
+        updateButtonStates()
     }
 
     private fun feedPet() {
@@ -80,7 +106,7 @@ class VirtualPetFragment : Fragment() {
 
         val storeView = view.findViewById<ImageButton>(R.id.ibPetShop)
         storeView.setOnClickListener {
-            startActivity(Intent(requireContext(), PetShopActivity::class.java))
+            petShopActivityResultLauncher.launch(Intent(requireContext(), PetShopActivity::class.java))
         }
 
         val galleryView = view.findViewById<ImageButton>(R.id.ibGallery)
@@ -134,5 +160,14 @@ class VirtualPetFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.e("VirtualPetFragment", "Error fetching pet heart counts", exception)
             }
+    }
+
+    private fun updateButtonStates() {
+        leftButton.isClickable = pets.size > 1
+        rightButton.isClickable = pets.size > 1
+    }
+
+    companion object {
+        private const val PET_SHOP_REQUEST_CODE = 1001
     }
 }

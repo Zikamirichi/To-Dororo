@@ -1,12 +1,12 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class PetShopActivity : AppCompatActivity() {
@@ -29,7 +29,7 @@ class PetShopActivity : AppCompatActivity() {
 
         // Setup RecyclerView
         recyclerViewPetShop = findViewById(R.id.recyclerViewPetShop)
-        petShopAdapter = PetShopAdapter(petList)
+        petShopAdapter = PetShopAdapter(petList, ::onPetBought)
         recyclerViewPetShop.adapter = petShopAdapter
         recyclerViewPetShop.layoutManager = GridLayoutManager(this, 2)
 
@@ -39,5 +39,13 @@ class PetShopActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun onPetBought(pet: PetShopData) {
+        val resultIntent = Intent()
+        resultIntent.putExtra("newPetResId", pet.imageResId)
+        resultIntent.putExtra("petType", pet.type)
+        setResult(RESULT_OK, resultIntent)
+        finish() // Close the PetShopActivity
     }
 }

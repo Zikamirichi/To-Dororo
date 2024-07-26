@@ -8,7 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PetShopAdapter (private val petList: List<PetShopData>) : RecyclerView.Adapter<PetShopAdapter.PetViewHolder>() {
+class PetShopAdapter(
+    private val petList: List<PetShopData>,
+    private val onPetBought: (PetShopData) -> Unit
+) : RecyclerView.Adapter<PetShopAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvPetType: TextView = itemView.findViewById(R.id.tvPetType)
@@ -27,8 +30,22 @@ class PetShopAdapter (private val petList: List<PetShopData>) : RecyclerView.Ada
         val pet = petList[position]
         holder.tvPetType.text = pet.type
         holder.ibBuyPet.setImageResource(pet.imageResId)
-        holder.ivHeartPet.setImageResource(R.drawable.heart) // Assuming you have a heart drawable
-        holder.tvPetPrice.text = pet.price.toString()
+        holder.ivHeartPet.setImageResource(R.drawable.heart)
+
+        if (pet.type == "Coming Soon") {
+            holder.ivHeartPet.visibility = View.GONE
+            holder.tvPetPrice.visibility = View.GONE
+            holder.ibBuyPet.isEnabled = false
+            holder.ibBuyPet.setOnClickListener(null)
+        } else {
+            holder.ivHeartPet.visibility = View.VISIBLE
+            holder.tvPetPrice.visibility = View.VISIBLE
+            holder.tvPetPrice.text = "100"
+            holder.ibBuyPet.isEnabled = true
+            holder.ibBuyPet.setOnClickListener {
+                onPetBought(pet)
+            }
+        }
     }
 
     override fun getItemCount(): Int = petList.size
