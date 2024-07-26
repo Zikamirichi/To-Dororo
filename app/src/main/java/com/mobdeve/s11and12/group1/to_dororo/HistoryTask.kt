@@ -1,4 +1,8 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
 // Task.kt
-data class HistoryTask(val title: String)
+data class HistoryTask(
+    val title: String,
+    val date: String = "", // Date for grouping tasks
+    val isDateHeader: Boolean = false // Indicates if it's a date header
+)

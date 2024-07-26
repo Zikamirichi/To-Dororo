@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -34,6 +35,18 @@ class UserProfileFragment : Fragment() {
         logoutButton.setOnClickListener {
             val intent = Intent(activity, LogInActivity::class.java)
             startActivity(intent)
+        }
+
+        // For History Button
+        val historyButton = view.findViewById<ImageButton>(R.id.history_icon)
+        historyButton.setOnClickListener {
+            startActivity(Intent(requireContext(), HistoryActivity::class.java))
+        }
+
+        // For Help button
+        val helpView = view.findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
+            startActivity(Intent(requireContext(), HelpActivity::class.java))
         }
 
         return view

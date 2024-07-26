@@ -17,7 +17,6 @@ class TodoAdapter(private val todoItems: List<TodoItem>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         val currentItem = todoItems[position]
-        val previousItem = if (position > 0) todoItems[position - 1] else null
 
         // Set date header visibility based on whether it's a new date
         if (currentItem.isDateHeader) {
@@ -25,22 +24,26 @@ class TodoAdapter(private val todoItems: List<TodoItem>) : RecyclerView.Adapter<
             holder.separatorLine.visibility = View.VISIBLE
             holder.textDate.text = currentItem.date
         } else {
-            holder.textDate.visibility = View.GONE
-            holder.separatorLine.visibility = View.GONE
+            // Remove views if not a date header
+            (holder.itemView as? ViewGroup)?.apply {
+                removeView(holder.textDate)
+                removeView(holder.separatorLine)
+            }
         }
 
         // Bind title
-        holder.btnTaskTitle.text = currentItem.title
-        holder.btnTaskTitle.setOnClickListener {
+        holder.activityButton.text = currentItem.title
+        holder.activityButton.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, DetailActivity::class.java).apply {
                 putExtra("taskTitle", currentItem.title)
                 putExtra("date", currentItem.date)
-                // Add other task details as extras here if needed
+
             }
             context.startActivity(intent)
         }
     }
+
 
     override fun getItemCount(): Int {
         return todoItems.size
@@ -49,7 +52,7 @@ class TodoAdapter(private val todoItems: List<TodoItem>) : RecyclerView.Adapter<
     // ViewHolder class
     class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textDate: TextView = itemView.findViewById(R.id.text_date)
-        val btnTaskTitle: Button = itemView.findViewById(R.id.btn_task_title)
+        val activityButton: Button = itemView.findViewById(R.id.activity_button)
         val separatorLine: View = itemView.findViewById(R.id.separator_line)
     }
 }

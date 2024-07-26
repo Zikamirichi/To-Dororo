@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class HistoryTaskAdapter(private val context: Context, private val taskList: MutableList<HistoryTask>) : RecyclerView.Adapter<HistoryTaskAdapter.TaskViewHolder>() {
@@ -18,12 +19,25 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = taskList[position]
         holder.activityButton.text = task.title
-        // Add click listeners for buttons if needed
+
+        if (task.isDateHeader) {
+            holder.textDate.visibility = View.VISIBLE
+            holder.separatorLine.visibility = View.VISIBLE
+            holder.textDate.text = task.date
+        } else {
+            // Remove views if not a date header
+            (holder.itemView as? ViewGroup)?.apply {
+                removeView(holder.textDate)
+                removeView(holder.separatorLine)
+            }
+        }
+
         holder.activityButton.setOnClickListener {
             // Launch DetailActivity with task details
             val intent = Intent(context, DetailActivity::class.java).apply {
                 putExtra("taskTitle", task.title)
-                // Add more extras as needed (date, total time, note)
+                putExtra("date", task.date)
+
         }
             context.startActivity(intent)
         }
@@ -39,8 +53,9 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
     }
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val textDate: TextView = itemView.findViewById(R.id.text_date)
         val activityButton: Button = itemView.findViewById(R.id.activity_button)
-        val designActivityButton: Button = itemView.findViewById(R.id.design_activity_button)
+        val separatorLine: View = itemView.findViewById(R.id.separator_line)
     }
 }
 

@@ -35,6 +35,12 @@ class VirtualPetFragment : Fragment() {
             startActivity(Intent(requireContext(), PetGalleryActivity::class.java))
         }
 
+        // For History Button
+        val historyButton = view.findViewById<ImageButton>(R.id.history_icon)
+        historyButton.setOnClickListener {
+            startActivity(Intent(requireContext(), HistoryActivity::class.java))
+        }
+
 
         return view
     }
