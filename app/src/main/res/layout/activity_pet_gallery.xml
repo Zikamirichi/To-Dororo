@@ -21,156 +21,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvCat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="13dp"
-        android:fontFamily="@font/gothic_a1_black"
-        android:text="Cat"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        android:textStyle="normal"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPetGallery"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
-
-    <ImageView
-        android:id="@+id/ivCatBaby"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="32dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/cat_baby"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
-
-    <ImageView
-        android:id="@+id/ivCatTeen"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="6dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/cat_teen"
-        app:layout_constraintEnd_toStartOf="@+id/ivCatAdult"
-        app:layout_constraintStart_toEndOf="@+id/ivCatBaby"
-        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
-
-    <ImageView
-        android:id="@+id/ivCatAdult"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="27dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/cat_adult"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPetgallery" />
-
-    <TextView
-        android:id="@+id/tvDog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="13dp"
-        android:fontFamily="@font/gothic_a1_black"
-        android:text="Dog"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCatBaby" />
-
-    <ImageView
-        android:id="@+id/ivDogBaby"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="32dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/dog_baby"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCatBaby" />
-
-    <ImageView
-        android:id="@+id/ivDogTeen"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="6dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/dog_teen"
-        app:layout_constraintEnd_toStartOf="@+id/ivDogAdult"
-        app:layout_constraintStart_toEndOf="@+id/ivDogBaby"
-        app:layout_constraintTop_toBottomOf="@+id/ivCatTeen" />
-
-    <ImageView
-        android:id="@+id/ivDogAdult"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="27dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/dog_adult"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivCatAdult" />
-
-    <TextView
-        android:id="@+id/tvParrot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="13dp"
-        android:fontFamily="@font/gothic_a1_black"
-        android:text="Parrot"
-        android:textColor="#000000"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivDogBaby" />
-
-    <ImageView
-        android:id="@+id/ivParrotBaby"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="32dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/parrot_baby"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivDogBaby" />
-
-    <ImageView
-        android:id="@+id/ivParrotTeen"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="6dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/locked_petgallery"
-        app:layout_constraintEnd_toStartOf="@+id/ivParrotAdult"
-        app:layout_constraintStart_toEndOf="@+id/ivParrotBaby"
-        app:layout_constraintTop_toBottomOf="@+id/ivDogTeen" />
-
-    <ImageView
-        android:id="@+id/ivParrotAdult"
-        android:layout_width="112dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="27dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/locked_petgallery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivDogAdult" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/tvHeartsUserGallery"
@@ -203,5 +68,4 @@
             android:layout_marginEnd="58dp"
             android:src="@drawable/heart" />
     </RelativeLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
