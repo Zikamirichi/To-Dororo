@@ -122,6 +122,12 @@ class VirtualPetFragment : Fragment() {
             return
         }
 
+        // Prevent feeding if the user has no hearts left
+        if (userHeartCount < 100) {
+            Toast.makeText(requireContext(), "Not enough hearts to feed the pet!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         // Increase hearts and handle evolution stages
         pet.hearts += 100
 
@@ -151,25 +157,24 @@ class VirtualPetFragment : Fragment() {
             }
         }
 
+        // Deduct hearts from user
+        userHeartCount -= 100
+        heartCountTextView.text = userHeartCount.toString()
+
         // Update the displayed heart count
         updateHeartDisplay()
 
-        // Deduct hearts from user if feeding is allowed
-        if (userHeartCount >= 100 && pet.hearts < 5000) {
-            userHeartCount -= 100
-            heartCountTextView.text = userHeartCount.toString()
-            updateHeartCountInFirestore(userHeartCount)
-        } else if (userHeartCount < 100) {
-            Toast.makeText(requireContext(), "Not enough hearts to feed the pet!", Toast.LENGTH_SHORT).show()
-        }
+        updateHeartCountInFirestore(userHeartCount)
     }
 
     private fun updateHeartDisplay() {
-        // Update the heart display for the currently displayed pet
+        // Update the heart display for the currently displayed pet or show `- / -` if no pet exists
         if (pets.isNotEmpty()) {
             val pet = pets[currentPetIndex]
             tvHeartsUserGallery.text = "${pet.hearts} / ${pet.maxHearts}"
             petImageView.setImageResource(pet.drawableResId)
+        } else {
+            tvHeartsUserGallery.text = "- / -"
         }
     }
 
@@ -210,7 +215,6 @@ class VirtualPetFragment : Fragment() {
                         userRef.set(mapOf("heart_count" to userHeartCount))
                     }
                     heartCountTextView.text = userHeartCount.toString()
-                    Log.d("VirtualPetFragment", "Fetched heart count: $userHeartCount")
                     fetchPetHeartCount(userId)
                 }
                 .addOnFailureListener { exception ->
@@ -259,6 +263,9 @@ class VirtualPetFragment : Fragment() {
                     currentPetIndex = 0
                     petImageView.setImageResource(pets[currentPetIndex].drawableResId)
                     updateHeartDisplay()
+                } else {
+                    // No pets available, update display accordingly
+                    tvHeartsUserGallery.text = "- / -"
                 }
 
                 updateButtonStates()
