@@ -16,10 +16,10 @@ class PetShopActivity : AppCompatActivity() {
 
     // Sample data for the RecyclerView
     private val petList = listOf(
-        PetShopData("Cat", R.drawable.cat_petshop, 100),
-        PetShopData("Dog", R.drawable.dog_petshop, 100),
-        PetShopData("Parrot", R.drawable.parrot_petshop, 100),
-        PetShopData("Coming Soon", R.drawable.comingsoon_petshop, 100)
+        PetShopData("Cat", R.drawable.cat_petshop, 1000),
+        PetShopData("Dog", R.drawable.dog_petshop, 1000),
+        PetShopData("Parrot", R.drawable.parrot_petshop, 1000),
+        PetShopData("Coming Soon", R.drawable.comingsoon_petshop, 1000)
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

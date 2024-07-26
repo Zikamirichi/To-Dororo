@@ -40,7 +40,7 @@ class PetShopAdapter(
         } else {
             holder.ivHeartPet.visibility = View.VISIBLE
             holder.tvPetPrice.visibility = View.VISIBLE
-            holder.tvPetPrice.text = "100"
+            holder.tvPetPrice.text = pet.price.toString()
             holder.ibBuyPet.isEnabled = true
             holder.ibBuyPet.setOnClickListener {
                 onPetBought(pet)
