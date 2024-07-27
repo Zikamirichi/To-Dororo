@@ -30,7 +30,7 @@ class HistoryActivity : AppCompatActivity() {
         recyclerView.adapter = historyTaskAdapter
 
         clearButton.setOnClickListener {
-            historyTaskAdapter.clearTasks()
+            clearCompletedTasks()
         }
 
         fetchCompletedTasks()
@@ -79,6 +79,41 @@ class HistoryActivity : AppCompatActivity() {
                 taskList.clear()
                 taskList.addAll(sortedTasks)
                 historyTaskAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                // Handle any errors here
+            }
+    }
+
+    private fun clearCompletedTasks() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            // Handle case where user is not logged in
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .collection("notes")
+            .whereEqualTo("isCompleted", true) // Filter for completed tasks
+            .get()
+            .addOnSuccessListener { result ->
+                val batch = firestore.batch()
+
+                for (document in result) {
+                    batch.delete(document.reference)
+                }
+
+                batch.commit().addOnSuccessListener {
+                    // Clear local list and refresh UI
+                    historyTaskAdapter.clearTasks() // Clear local tasks
+                    fetchCompletedTasks() // Refresh the list
+                }
+                    .addOnFailureListener { exception ->
+                        // Handle any errors here
+                    }
             }
             .addOnFailureListener { exception ->
                 // Handle any errors here
