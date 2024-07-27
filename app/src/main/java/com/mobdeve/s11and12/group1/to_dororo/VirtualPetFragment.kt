@@ -110,44 +110,41 @@ class VirtualPetFragment : Fragment() {
             return
         }
 
-        // Log current pet state before feeding
-        Log.d("VirtualPetFragment", "Feeding pet: ${pet.id}, type: ${pet.type}, heartsPet: ${pet.heartsPet}, maxHearts: ${pet.maxHearts}, drawableResId: ${pet.drawableResId}")
-
         // Increase hearts and handle evolution stages
         pet.heartsPet += 100
 
         // Handle evolution stages
-        when {
-            pet.stage == "baby" && pet.heartsPet >= 3000 -> { // Evolve from Baby to Teen
-                pet.stage = "teen"
-                pet.maxHearts = 5000
-                pet.heartsPet = 0 // Reset hearts for the Teen stage
-                pet.drawableResId = when (pet.type) {
-                    "Cat" -> R.drawable.cat_teen
-                    "Dog" -> R.drawable.dog_teen
-                    "Parrot" -> R.drawable.parrot_teen
-                    else -> pet.drawableResId
+        if (pet.heartsPet >= pet.maxHearts) {
+            when {
+                pet.maxHearts == 3000 -> { // Evolve from Baby to Teen
+                    pet.maxHearts = 5000
+                    pet.heartsPet = 0 // Reset hearts for the Teen stage
+                    pet.drawableResId = when (pet.type) {
+                        "Cat" -> R.drawable.cat_teen
+                        "Dog" -> R.drawable.dog_teen
+                        "Parrot" -> R.drawable.parrot_teen
+                        else -> pet.drawableResId
+                    }
                 }
-            }
-            pet.stage == "teen" && pet.heartsPet >= 5000 -> { // Evolve from Teen to Adult
-                pet.stage = "adult"
-                pet.maxHearts = 5000
-                pet.heartsPet = 5000 // Keep hearts at max for Adult stage
-                pet.drawableResId = when (pet.type) {
-                    "Cat" -> R.drawable.cat_adult
-                    "Dog" -> R.drawable.dog_adult
-                    "Parrot" -> R.drawable.parrot_adult
-                    else -> pet.drawableResId
+                pet.maxHearts == 5000 -> { // Evolve from Teen to Adult
+                    pet.maxHearts = 5000
+                    pet.heartsPet = 5000 // Reset hearts to max for Adult stage
+                    pet.drawableResId = when (pet.type) {
+                        "Cat" -> R.drawable.cat_adult
+                        "Dog" -> R.drawable.dog_adult
+                        "Parrot" -> R.drawable.parrot_adult
+                        else -> pet.drawableResId
+                    }
                 }
             }
         }
 
-        // Log updated pet state after feeding
-        Log.d("VirtualPetFragment", "After feeding: ${pet.id}, type: ${pet.type}, heartsPet: ${pet.heartsPet}, maxHearts: ${pet.maxHearts}, drawableResId: ${pet.drawableResId}")
-
         // Deduct hearts from user
         userHeartCount -= 100
         heartCountTextView.text = userHeartCount.toString()
+
+        // Update the displayed heart count
+        updateHeartDisplay()
 
         // Update Firestore with new pet and user data
         val user = FirebaseAuth.getInstance().currentUser
@@ -159,16 +156,18 @@ class VirtualPetFragment : Fragment() {
             db.runTransaction { transaction ->
                 val petDocument = transaction.get(petRef)
                 if (petDocument.exists()) {
-                    // Update pet data
-                    transaction.set(petRef, mapOf(
-                        "type" to pet.type,
-                        "heartsPet" to pet.heartsPet,
-                        "stage" to pet.stage,
-                        "maxHearts" to pet.maxHearts,
-                        "drawableResId" to pet.drawableResId // Ensure this field is updated
-                    ))
+                    val updatedPet = petDocument.toObject(PetData::class.java)?.apply {
+                        heartsPet = pet.heartsPet
+                        stage = when {
+                            pet.maxHearts == 5000 && pet.heartsPet == 0 -> "teen"
+                            pet.maxHearts == 5000 && pet.heartsPet == 5000 -> "adult"
+                            else -> "baby"
+                        }
+                    }
+                    if (updatedPet != null) {
+                        transaction.set(petRef, updatedPet.toMap())
+                    }
                 }
-                // Update user hearts
                 transaction.update(userRef, "hearts", userHeartCount)
             }.addOnSuccessListener {
                 Log.d("VirtualPetFragment", "Pet and user data updated successfully")
@@ -178,13 +177,7 @@ class VirtualPetFragment : Fragment() {
                 Log.e("VirtualPetFragment", "Error updating pet and user data", exception)
             }
         }
-
-        // Update the ImageView with the new pet drawable
-        updatePetImageView()
     }
-
-
-
 
     private fun updateHeartDisplay() {
         if (pets.isNotEmpty()) {
