@@ -8,15 +8,18 @@ data class PetData(
     var heartsPet: Int = 0,
     var drawableResId: Int = 0,
     var maxHearts: Int = 0,
-    var stage: String = ""
+    var stage: String = "",
+    var order: Long = 0
 ) {
     fun toMap(): Map<String, Any?> {
         return mapOf(
+            "id" to id,
             "type" to type,
             "heartsPet" to heartsPet,
             "drawableResId" to drawableResId,
             "maxHearts" to maxHearts,
-            "stage" to stage
+            "stage" to stage,
+            "order" to order
         )
     }
 }

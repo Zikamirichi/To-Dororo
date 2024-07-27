@@ -106,7 +106,8 @@ class PetShopActivity : AppCompatActivity() {
                         heartsPet = 0,
                         drawableResId = getDrawableResIdForVirtualPet(pet.type),
                         maxHearts = 3000,
-                        stage = "baby"
+                        stage = "baby",
+                        order = System.currentTimeMillis()
                     )
                     transaction.set(newPetRef, newPetData.toMap())
                     runOnUiThread {
