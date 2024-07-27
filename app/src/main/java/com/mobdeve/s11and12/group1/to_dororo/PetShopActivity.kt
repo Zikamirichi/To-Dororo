@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 
 class PetShopActivity : AppCompatActivity() {
@@ -21,6 +22,7 @@ class PetShopActivity : AppCompatActivity() {
     private val petList = mutableListOf<PetShopItem>()
     private lateinit var db: FirebaseFirestore
     private lateinit var user: FirebaseAuth
+    private lateinit var tvHeartsUser: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,21 +32,24 @@ class PetShopActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
         user = FirebaseAuth.getInstance()
 
+        tvHeartsUser = findViewById(R.id.tvHeartsUser)
+
         // Setup RecyclerView
         recyclerViewPetShop = findViewById(R.id.recyclerViewPetShop)
         petShopAdapter = PetShopAdapter(petList, ::onPetBought)
         recyclerViewPetShop.adapter = petShopAdapter
         recyclerViewPetShop.layoutManager = GridLayoutManager(this, 2)
 
-        // Handle edge-to-edge layout
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Fetch pets from Firebase
+        // Fetch data from Firebase
         fetchPetsFromFirebase()
+        fetchUserHeartCount()
     }
 
     private fun fetchPetsFromFirebase() {
@@ -59,6 +64,21 @@ class PetShopActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.e("PetShopActivity", "Error fetching pets", exception)
+            }
+    }
+
+    private fun fetchUserHeartCount() {
+        val userId = user.currentUser?.uid ?: return
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get()
+            .addOnSuccessListener { document ->
+                val heartCount = document?.getLong("hearts") ?: 0
+                tvHeartsUser.text = "$heartCount"
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PetShopActivity", "Error fetching user heart count", exception)
+                tvHeartsUser.text = "--"
             }
     }
 
@@ -78,20 +98,25 @@ class PetShopActivity : AppCompatActivity() {
                     // Deduct 1000 hearts
                     transaction.update(userRef, "hearts", currentHeartCount - 1000)
 
+                    // Create a new pet document with a unique ID
+                    val newPetRef = petsCollectionRef.document() // Auto-generated ID
                     val newPetData = PetData(
+                        id = newPetRef.id, // Set the unique ID
                         type = pet.type,
                         heartsPet = 0,
                         drawableResId = getDrawableResIdForVirtualPet(pet.type),
                         maxHearts = 3000,
                         stage = "baby"
                     )
-                    val newPetRef = petsCollectionRef.document() // Create a new document reference with auto-generated ID
                     transaction.set(newPetRef, newPetData.toMap())
-                    Toast.makeText(this, "Congratulations on your new pet!", Toast.LENGTH_SHORT).show()
+                    runOnUiThread {
+                        Toast.makeText(this, "Congratulations on your new pet!", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
+                    runOnUiThread {
+                        Toast.makeText(this, "Not enough hearts to adopt the pet", Toast.LENGTH_SHORT).show()
+                    }
                     throw Exception("Not enough hearts to buy the pet")
-                    Toast.makeText(this, "Not enough hearts to adopt the pet", Toast.LENGTH_SHORT).show()
-
                 }
             } else {
                 throw Exception("User document does not exist")
@@ -107,6 +132,8 @@ class PetShopActivity : AppCompatActivity() {
             Log.e("PetShopActivity", "Error processing pet purchase", exception)
         }
     }
+
+
     private fun getDrawableResIdForVirtualPet(petType: String): Int {
         return when (petType) {
             "Cat" -> R.drawable.cat_baby

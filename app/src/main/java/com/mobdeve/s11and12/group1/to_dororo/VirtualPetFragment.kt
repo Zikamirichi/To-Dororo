@@ -65,6 +65,11 @@ class VirtualPetFragment : Fragment() {
         // Fetch data from Firestore
         fetchUserData()
 
+        // update views
+        updatePetImageView()
+        updateButtonStates()
+        updateHeartDisplay()
+
         return view
     }
 
@@ -146,7 +151,7 @@ class VirtualPetFragment : Fragment() {
         if (user != null) {
             val userId = user.uid
             val userRef = db.collection("users").document(userId)
-            val petRef = db.collection("users").document(userId).collection("pets").document(pet.type)
+            val petRef = db.collection("users").document(userId).collection("pets").document(pet.id) // Use unique pet ID
 
             db.runTransaction { transaction ->
                 val petDocument = transaction.get(petRef)
@@ -166,6 +171,8 @@ class VirtualPetFragment : Fragment() {
                 transaction.update(userRef, "hearts", userHeartCount)
             }.addOnSuccessListener {
                 Log.d("VirtualPetFragment", "Pet and user data updated successfully")
+                // Refresh pet data to update UI
+                fetchPetHeartCount(userId)
             }.addOnFailureListener { exception ->
                 Log.e("VirtualPetFragment", "Error updating pet and user data", exception)
             }
@@ -177,7 +184,7 @@ class VirtualPetFragment : Fragment() {
             val pet = pets[currentPetIndex]
             tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
         } else {
-            tvHeartsUserGallery.text = "- / -"
+            tvHeartsUserGallery.text = "-- / --"
         }
     }
 
@@ -216,6 +223,7 @@ class VirtualPetFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 pets.clear()
                 for (document in documents) {
+                    val petId = document.id // Unique ID for each pet document
                     val petType = document.getString("type") ?: "unknown"
                     val heartsPet = document.getLong("heartsPet") ?: 0
                     val stage = document.getString("stage") ?: "baby"
@@ -242,7 +250,7 @@ class VirtualPetFragment : Fragment() {
                         "adult" -> 5000
                         else -> 3000
                     }
-                    pets.add(PetData(petType, heartsPet.toInt(), drawableResId, maxHearts, stage))
+                    pets.add(PetData(petId, petType, heartsPet.toInt(), drawableResId, maxHearts, stage))
                 }
                 if (pets.isNotEmpty()) {
                     currentPetIndex = 0
@@ -255,6 +263,7 @@ class VirtualPetFragment : Fragment() {
                 Log.e("VirtualPetFragment", "Error fetching pet data", exception)
             }
     }
+
 
     private fun updateButtonStates() {
         leftButton.isEnabled = pets.size > 1
@@ -283,3 +292,4 @@ class VirtualPetFragment : Fragment() {
         }
     }
 }
+
