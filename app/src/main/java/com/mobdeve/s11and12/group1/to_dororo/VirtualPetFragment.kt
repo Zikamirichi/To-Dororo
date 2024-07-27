@@ -19,7 +19,44 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 
 class VirtualPetFragment : Fragment() {
-    private data class Pet(val type: String, var hearts: Int, var drawableResId: Int, var maxHearts: Int)
+    private data class Pet(
+        val type: String = "",
+        var hearts: Int = 0,
+        var drawableResId: Int = R.drawable.adopt_a_pet,
+        var maxHearts: Int = 3000
+    ) {
+        companion object {
+            fun fromDocument(doc: Map<String, Any>): Pet {
+                val type = doc["type"] as String? ?: ""
+                val hearts = (doc["hearts"] as Long? ?: 0).toInt()
+                val maxHearts = when {
+                    hearts >= 5000 -> 5000
+                    hearts >= 3000 -> 5000
+                    else -> 3000
+                }
+                val drawableResId = when (type) {
+                    "Cat" -> when {
+                        hearts >= 5000 -> R.drawable.cat_adult
+                        hearts >= 3000 -> R.drawable.cat_teen
+                        else -> R.drawable.cat_baby
+                    }
+                    "Dog" -> when {
+                        hearts >= 5000 -> R.drawable.dog_adult
+                        hearts >= 3000 -> R.drawable.dog_teen
+                        else -> R.drawable.dog_baby
+                    }
+                    "Parrot" -> when {
+                        hearts >= 5000 -> R.drawable.parrot_adult
+                        hearts >= 3000 -> R.drawable.parrot_teen
+                        else -> R.drawable.parrot_baby
+                    }
+                    else -> R.drawable.adopt_a_pet
+                }
+                return Pet(type, hearts, drawableResId, maxHearts)
+            }
+        }
+    }
+
 
     private val pets = mutableListOf<Pet>()
     private var currentPetIndex = 0
@@ -29,7 +66,7 @@ class VirtualPetFragment : Fragment() {
     private lateinit var leftButton: ImageButton
     private lateinit var rightButton: ImageButton
     private lateinit var petImageView: ImageView
-    private var userHeartCount = 20000L // Track user's total heart count -- hard coded
+    private var userHeartCount: Long = 0
 
     private val petShopActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
@@ -105,7 +142,7 @@ class VirtualPetFragment : Fragment() {
         currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
         petImageView.setImageResource(pets[currentPetIndex].drawableResId)
         updateButtonStates()
-        updateHeartDisplay() // Update heart display based on selected pet
+        updateHeartDisplay()
     }
 
     private fun feedPet() {
@@ -184,7 +221,7 @@ class VirtualPetFragment : Fragment() {
             val userId = user.uid
             val userRef = db.collection("users").document(userId)
 
-            userRef.update("heart_count", newHeartCount)
+            userRef.update("hearts", newHeartCount)
                 .addOnSuccessListener {
                     Log.d("VirtualPetFragment", "User heart count updated successfully")
                     userHeartCount = newHeartCount
@@ -206,16 +243,17 @@ class VirtualPetFragment : Fragment() {
             userRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        val heartCount = document.getLong("heart_count") ?: 0
-                        userHeartCount = heartCount
+                        val heartCount = document.getLong("hearts")
+                        if (heartCount != null) {
+                            userHeartCount = heartCount
+                            heartCountTextView.text = userHeartCount.toString()
+                            fetchPetHeartCount(userId)
+                        } else {
+                            Log.e("VirtualPetFragment", "Heart count is null")
+                        }
                     } else {
-                        // Set initial heart count to 10,000 for new users
-                        userHeartCount = 10000
-                        // Save this initial heart count to Firestore
-                        userRef.set(mapOf("heart_count" to userHeartCount))
+                        Log.e("VirtualPetFragment", "User document does not exist")
                     }
-                    heartCountTextView.text = userHeartCount.toString()
-                    fetchPetHeartCount(userId)
                 }
                 .addOnFailureListener { exception ->
                     Log.e("VirtualPetFragment", "Error fetching heart count", exception)

@@ -8,24 +8,26 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import android.util.Log
 
 class PetShopActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewPetShop: RecyclerView
     private lateinit var petShopAdapter: PetShopAdapter
-
-    // Sample data for the RecyclerView
-    private val petList = listOf(
-        PetShopData("Cat", R.drawable.cat_petshop, 1000),
-        PetShopData("Dog", R.drawable.dog_petshop, 1000),
-        PetShopData("Parrot", R.drawable.parrot_petshop, 1000),
-        PetShopData("Coming Soon", R.drawable.comingsoon_petshop, 1000)
-    )
+    private val petList = mutableListOf<PetShopItem>()
+    private lateinit var db: FirebaseFirestore
+    private lateinit var user: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_pet_shop)
+
+        // Initialize Firestore and Auth
+        db = FirebaseFirestore.getInstance()
+        user = FirebaseAuth.getInstance()
 
         // Setup RecyclerView
         recyclerViewPetShop = findViewById(R.id.recyclerViewPetShop)
@@ -39,13 +41,45 @@ class PetShopActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        // Fetch pets from Firebase
+        fetchPetsFromFirebase()
     }
 
-    private fun onPetBought(pet: PetShopData) {
+    private fun fetchPetsFromFirebase() {
+        db.collection("shop").get()
+            .addOnSuccessListener { documents ->
+                petList.clear()
+                for (document in documents) {
+                    val pet = document.toObject(PetShopItem::class.java)
+                    petList.add(pet)
+                }
+                petShopAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PetShopActivity", "Error fetching pets", exception)
+            }
+    }
+
+    private fun onPetBought(pet: PetShopItem) {
         val resultIntent = Intent()
-        resultIntent.putExtra("newPetResId", pet.imageResId)
+        resultIntent.putExtra("newPetResId", pet.imageResId)  // Changed from drawableResId to imageResId
         resultIntent.putExtra("petType", pet.type)
         setResult(RESULT_OK, resultIntent)
-        finish() // Close the PetShopActivity
+
+        // Add pet to user's collection in Firestore
+        val userId = user.currentUser?.uid ?: return
+        val petData = hashMapOf(
+            "type" to pet.type,
+            "imageResId" to pet.imageResId,
+            "price" to pet.price
+        )
+        db.collection("users").document(userId).collection("pets").add(petData)
+            .addOnSuccessListener {
+                finish() // Close the PetShopActivity
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PetShopActivity", "Error adding pet to user collection", exception)
+            }
     }
 }
