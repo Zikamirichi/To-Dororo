@@ -7,13 +7,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.util.ArrayList
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseAuth
+import android.util.Log
 
 class PetGalleryActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var petGalleryAdapter: PetGalleryAdapter
-    private lateinit var petGalleryList: MutableList<PetGalleryItem>
+    private val petGalleryList = mutableListOf<PetGalleryItem>()
+    private lateinit var db: FirebaseFirestore
+    private val user = FirebaseAuth.getInstance().currentUser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +32,36 @@ class PetGalleryActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerViewPetGallery)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        petGalleryList = ArrayList()
-        petGalleryList.add(PetGalleryItem("Cat", R.drawable.cat_baby, R.drawable.cat_teen, R.drawable.cat_adult))
-        petGalleryList.add(PetGalleryItem("Dog", R.drawable.dog_baby, R.drawable.dog_teen, R.drawable.dog_adult))
-        petGalleryList.add(PetGalleryItem("Parrot", R.drawable.parrot_baby, R.drawable.locked_petgallery, R.drawable.locked_petgallery))
-        // Add more items if needed
-
         petGalleryAdapter = PetGalleryAdapter(this, petGalleryList)
         recyclerView.adapter = petGalleryAdapter
+
+        db = FirebaseFirestore.getInstance()
+
+        fetchPetGalleryData()
+    }
+
+    private fun fetchPetGalleryData() {
+        val userId = user?.uid ?: return
+        val petRef = db.collection("users").document(userId).collection("gallery")
+
+        petRef.get()
+            .addOnSuccessListener { documents ->
+                petGalleryList.clear()
+                for (document in documents) {
+                    val title = document.getString("title") ?: "Unknown"
+
+                    // Fetch drawable resource IDs
+                    val babyImage = document.getLong("babyImage")?.toInt() ?: R.drawable.adopt_a_pet
+                    val teenImage = document.getLong("teenImage")?.toInt() ?: R.drawable.adopt_a_pet
+                    val adultImage = document.getLong("adultImage")?.toInt() ?: R.drawable.adopt_a_pet
+
+                    // Add item to list
+                    petGalleryList.add(PetGalleryItem(title, babyImage, teenImage, adultImage))
+                }
+                petGalleryAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PetGalleryActivity", "Error fetching pet gallery data", exception)
+            }
     }
 }
