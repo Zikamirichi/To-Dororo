@@ -73,7 +73,6 @@
                         android:fontFamily="@font/archivo"
                         android:textAlignment="viewEnd"
                         android:paddingRight="10dp"
-                        android:text="100"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -125,7 +124,6 @@
         android:paddingTop="4dp"
         android:paddingRight="10dp"
         android:paddingBottom="4dp"
-        android:text="100 / 1000"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="17sp"
@@ -154,7 +152,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/parrot_teen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvHeartsUserGallery" />

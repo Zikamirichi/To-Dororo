@@ -114,17 +114,31 @@ class CreateAccountActivity : AppCompatActivity() {
             "totalTime" to ""
         )
 
-        val petsMap = hashMapOf(
-            "heartCount" to 0,
-            "stage" to "baby",
-            "type" to "cat",
-            "unlocked" to false
+//        val petsMap = hashMapOf(
+//            "heartCount" to "",
+//            "stage" to "",
+//            "type" to "",
+//            "unlocked" to false
+//        )
+
+//        val galleryMap = hashMapOf(
+//            "heartCount" to "",
+//            "stage" to "",
+//            "type" to "",
+//            "unlocked" to false
+//        )
+
+        val petShopItems = listOf(
+            PetShopItem("Cat", R.drawable.cat_petshop, 1000),
+            PetShopItem("Dog", R.drawable.dog_petshop, 1000),
+            PetShopItem("Parrot", R.drawable.parrot_petshop, 1000),
+            PetShopItem("Coming Soon", R.drawable.comingsoon_petshop, 1000)
         )
 
-        val galleryMap = hashMapOf(
-            "stage" to "baby",
-            "type" to "cat",
-            "unlocked" to false
+        val galleryItems = listOf(
+            PetGalleryItem("Cat", R.drawable.locked_petgallery, R.drawable.locked_petgallery, R.drawable.locked_petgallery),
+            PetGalleryItem("Dog", R.drawable.locked_petgallery, R.drawable.locked_petgallery, R.drawable.locked_petgallery),
+            PetGalleryItem("Parrot", R.drawable.locked_petgallery, R.drawable.locked_petgallery, R.drawable.locked_petgallery)
         )
 
         val userDocRef = firestore.collection("users").document(userId)
@@ -135,11 +149,31 @@ class CreateAccountActivity : AppCompatActivity() {
         userDocRef.collection("notes").add(notesMap)
             .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create notes subcollection: ${e.message}", e) }
 
-        userDocRef.collection("pets").add(petsMap)
-            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create pets subcollection: ${e.message}", e) }
+//        userDocRef.collection("pets").add(petsMap)
+//            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create pets subcollection: ${e.message}", e) }
 
-        userDocRef.collection("gallery").add(galleryMap)
-            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create gallery subcollection: ${e.message}", e) }
+        // Create pets subcollection
+        petShopItems.forEach { item ->
+            val petShopItem = hashMapOf(
+                "type" to item.type,
+                "imageResId" to item.imageResId,
+                "cost" to item.price
+            )
+            userDocRef.collection("petShop").add(petShopItem)
+                .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to add pet item: ${e.message}", e) }
+        }
+
+        // Create gallery subcollection
+        galleryItems.forEach { item ->
+            val galleryData = hashMapOf(
+                "title" to item.type,
+                "babyImage" to item.babyImage,
+                "teenImage" to item.teenImage,
+                "adultImage" to item.adultImage
+            )
+            userDocRef.collection("gallery").add(galleryData)
+                .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to add gallery item: ${e.message}", e) }
+        }
     }
 }
 

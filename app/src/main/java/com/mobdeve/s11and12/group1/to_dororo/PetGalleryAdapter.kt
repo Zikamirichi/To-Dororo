@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class PetGalleryAdapter (private val context: Context, private val petList: List<PetGalleryData>) :
-    RecyclerView.Adapter<PetGalleryAdapter.PetGalleryViewHolder>() {
+class PetGalleryAdapter (
+    private val context: Context,
+    private val petList: List<PetGalleryItem>
+) : RecyclerView.Adapter<PetGalleryAdapter.PetGalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetGalleryViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_petgallery, parent, false)
@@ -18,7 +20,7 @@ class PetGalleryAdapter (private val context: Context, private val petList: List
 
     override fun onBindViewHolder(holder: PetGalleryViewHolder, position: Int) {
         val pet = petList[position]
-        holder.tvPetType.text = pet.title
+        holder.tvPetType.text = pet.type
         holder.ivPetBaby.setImageResource(pet.babyImage)
         holder.ivPetTeen.setImageResource(pet.teenImage)
         holder.ivPetAdult.setImageResource(pet.adultImage)

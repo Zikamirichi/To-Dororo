@@ -13,7 +13,7 @@ class PetGalleryActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var petGalleryAdapter: PetGalleryAdapter
-    private lateinit var petGalleryList: MutableList<PetGalleryData>
+    private lateinit var petGalleryList: MutableList<PetGalleryItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,9 +29,9 @@ class PetGalleryActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         petGalleryList = ArrayList()
-        petGalleryList.add(PetGalleryData("Cat", R.drawable.cat_baby, R.drawable.cat_teen, R.drawable.cat_adult))
-        petGalleryList.add(PetGalleryData("Dog", R.drawable.dog_baby, R.drawable.dog_teen, R.drawable.dog_adult))
-        petGalleryList.add(PetGalleryData("Parrot", R.drawable.parrot_baby, R.drawable.locked_petgallery, R.drawable.locked_petgallery))
+        petGalleryList.add(PetGalleryItem("Cat", R.drawable.cat_baby, R.drawable.cat_teen, R.drawable.cat_adult))
+        petGalleryList.add(PetGalleryItem("Dog", R.drawable.dog_baby, R.drawable.dog_teen, R.drawable.dog_adult))
+        petGalleryList.add(PetGalleryItem("Parrot", R.drawable.parrot_baby, R.drawable.locked_petgallery, R.drawable.locked_petgallery))
         // Add more items if needed
 
         petGalleryAdapter = PetGalleryAdapter(this, petGalleryList)

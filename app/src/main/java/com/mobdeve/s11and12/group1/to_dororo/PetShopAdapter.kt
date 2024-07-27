@@ -7,10 +7,11 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.reflect.KFunction1
 
 class PetShopAdapter(
-    private val petList: List<PetShopData>,
-    private val onPetBought: (PetShopData) -> Unit
+    private val petList: List<PetShopItem>,
+    private val onPetBought: (PetShopItem) -> Unit
 ) : RecyclerView.Adapter<PetShopAdapter.PetViewHolder>() {
 
     inner class PetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
