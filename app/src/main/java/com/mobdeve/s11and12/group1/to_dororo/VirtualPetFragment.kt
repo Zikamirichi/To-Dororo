@@ -19,46 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
 
 class VirtualPetFragment : Fragment() {
-    private data class Pet(
-        val type: String = "",
-        var hearts: Int = 0,
-        var drawableResId: Int = R.drawable.adopt_a_pet,
-        var maxHearts: Int = 3000
-    ) {
-        companion object {
-            fun fromDocument(doc: Map<String, Any>): Pet {
-                val type = doc["type"] as String? ?: ""
-                val hearts = (doc["hearts"] as Long? ?: 0).toInt()
-                val maxHearts = when {
-                    hearts >= 5000 -> 5000
-                    hearts >= 3000 -> 5000
-                    else -> 3000
-                }
-                val drawableResId = when (type) {
-                    "Cat" -> when {
-                        hearts >= 5000 -> R.drawable.cat_adult
-                        hearts >= 3000 -> R.drawable.cat_teen
-                        else -> R.drawable.cat_baby
-                    }
-                    "Dog" -> when {
-                        hearts >= 5000 -> R.drawable.dog_adult
-                        hearts >= 3000 -> R.drawable.dog_teen
-                        else -> R.drawable.dog_baby
-                    }
-                    "Parrot" -> when {
-                        hearts >= 5000 -> R.drawable.parrot_adult
-                        hearts >= 3000 -> R.drawable.parrot_teen
-                        else -> R.drawable.parrot_baby
-                    }
-                    else -> R.drawable.adopt_a_pet
-                }
-                return Pet(type, hearts, drawableResId, maxHearts)
-            }
-        }
-    }
-
-
-    private val pets = mutableListOf<Pet>()
+    private val pets = mutableListOf<PetData>()
     private var currentPetIndex = 0
     private lateinit var db: FirebaseFirestore
     private lateinit var heartCountTextView: TextView
@@ -71,34 +32,8 @@ class VirtualPetFragment : Fragment() {
     private val petShopActivityResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
-                val newPetResId = result.data?.getIntExtra("newPetResId", R.drawable.adopt_a_pet)
-                val petType = result.data?.getStringExtra("petType")
-                if (newPetResId != null && newPetResId != R.drawable.adopt_a_pet && petType != null) {
-                    val drawableResId = when (petType) {
-                        "Cat" -> R.drawable.cat_baby
-                        "Dog" -> R.drawable.dog_baby
-                        "Parrot" -> R.drawable.parrot_baby
-                        else -> newPetResId
-                    }
-                    Log.d("VirtualPetFragment", "Attempting to buy pet. Current heart count: $userHeartCount")
-
-                    // Deduct 1000 hearts for unlocking the pet
-                    if (userHeartCount >= 1000) {
-                        userHeartCount -= 1000
-                        heartCountTextView.text = userHeartCount.toString()
-                        pets.add(Pet(petType, 0, drawableResId, 3000)) // Initialize as baby stage with max hearts of 3000
-                        if (pets.size == 2 && pets[0].type == "adopt_a_pet") {
-                            pets.removeAt(0) // Remove the adopt_a_pet if another pet is added
-                        }
-                        currentPetIndex = pets.size - 1
-                        petImageView.setImageResource(pets[currentPetIndex].drawableResId)
-                        updateButtonStates()
-                        updateHeartDisplay() // Ensure the heart display is updated
-                        updateHeartCountInFirestore(userHeartCount) // Update Firestore with the new heart count
-                    } else {
-                        Toast.makeText(requireContext(), "Not enough hearts to unlock pet!", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                // Reload user data to reflect updated heart count
+                fetchUserData()
             }
         }
 
@@ -116,10 +51,8 @@ class VirtualPetFragment : Fragment() {
         heartCountTextView = view.findViewById(R.id.heart_count)
         tvHeartsUserGallery = view.findViewById(R.id.tvHeartsUserGallery)
 
-        // Set initial pet and heart count
-        petImageView.setImageResource(pets.getOrNull(currentPetIndex)?.drawableResId ?: R.drawable.adopt_a_pet)
-        updateButtonStates()
-        updateHeartDisplay() // Ensure initial heart display is updated
+        // Initialize Firestore
+        db = FirebaseFirestore.getInstance()
 
         // Set button click listeners
         leftButton.setOnClickListener { switchPet(-1) }
@@ -129,9 +62,6 @@ class VirtualPetFragment : Fragment() {
         // Existing button setups
         setupOtherButtons(view)
 
-        // Initialize Firestore
-        db = FirebaseFirestore.getInstance()
-
         // Fetch data from Firestore
         fetchUserData()
 
@@ -139,10 +69,20 @@ class VirtualPetFragment : Fragment() {
     }
 
     private fun switchPet(direction: Int) {
-        currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
-        petImageView.setImageResource(pets[currentPetIndex].drawableResId)
-        updateButtonStates()
-        updateHeartDisplay()
+        if (pets.isNotEmpty()) {
+            currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
+            updatePetImageView()
+            updateButtonStates()
+            updateHeartDisplay()
+        }
+    }
+
+    private fun updatePetImageView() {
+        if (pets.isNotEmpty()) {
+            petImageView.setImageResource(pets[currentPetIndex].drawableResId)
+        } else {
+            petImageView.setImageResource(R.drawable.adopt_a_pet)
+        }
     }
 
     private fun feedPet() {
@@ -154,7 +94,7 @@ class VirtualPetFragment : Fragment() {
         val pet = pets[currentPetIndex]
 
         // Prevent feeding if the pet is an adult
-        if (pet.maxHearts == 5000 && pet.hearts >= 5000) {
+        if (pet.maxHearts == 5000 && pet.heartsPet >= 5000) {
             Toast.makeText(requireContext(), "This pet is already an adult and cannot be fed.", Toast.LENGTH_SHORT).show()
             return
         }
@@ -166,14 +106,14 @@ class VirtualPetFragment : Fragment() {
         }
 
         // Increase hearts and handle evolution stages
-        pet.hearts += 100
+        pet.heartsPet += 100
 
         // Handle evolution stages
-        if (pet.hearts >= pet.maxHearts) {
+        if (pet.heartsPet >= pet.maxHearts) {
             when {
                 pet.maxHearts == 3000 -> { // Evolve from Baby to Teen
                     pet.maxHearts = 5000
-                    pet.hearts = 0 // Reset hearts for the Teen stage
+                    pet.heartsPet = 0 // Reset hearts for the Teen stage
                     pet.drawableResId = when (pet.type) {
                         "Cat" -> R.drawable.cat_teen
                         "Dog" -> R.drawable.dog_teen
@@ -183,7 +123,7 @@ class VirtualPetFragment : Fragment() {
                 }
                 pet.maxHearts == 5000 -> { // Evolve from Teen to Adult
                     pet.maxHearts = 5000
-                    pet.hearts = 5000 // Reset hearts to max for Adult stage
+                    pet.heartsPet = 5000 // Reset hearts to max for Adult stage
                     pet.drawableResId = when (pet.type) {
                         "Cat" -> R.drawable.cat_adult
                         "Dog" -> R.drawable.dog_adult
@@ -201,35 +141,43 @@ class VirtualPetFragment : Fragment() {
         // Update the displayed heart count
         updateHeartDisplay()
 
-        updateHeartCountInFirestore(userHeartCount)
-    }
-
-    private fun updateHeartDisplay() {
-        // Update the heart display for the currently displayed pet or show `- / -` if no pet exists
-        if (pets.isNotEmpty()) {
-            val pet = pets[currentPetIndex]
-            tvHeartsUserGallery.text = "${pet.hearts} / ${pet.maxHearts}"
-            petImageView.setImageResource(pet.drawableResId)
-        } else {
-            tvHeartsUserGallery.text = "- / -"
-        }
-    }
-
-    private fun updateHeartCountInFirestore(newHeartCount: Long) {
+        // Update Firestore with new pet and user data
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             val userId = user.uid
             val userRef = db.collection("users").document(userId)
+            val petRef = db.collection("users").document(userId).collection("pets").document(pet.type)
 
-            userRef.update("hearts", newHeartCount)
-                .addOnSuccessListener {
-                    Log.d("VirtualPetFragment", "User heart count updated successfully")
-                    userHeartCount = newHeartCount
-                    heartCountTextView.text = userHeartCount.toString()
+            db.runTransaction { transaction ->
+                val petDocument = transaction.get(petRef)
+                if (petDocument.exists()) {
+                    val updatedPet = petDocument.toObject(PetData::class.java)?.apply {
+                        heartsPet = pet.heartsPet
+                        stage = when {
+                            pet.maxHearts == 5000 && pet.heartsPet == 0 -> "teen"
+                            pet.maxHearts == 5000 && pet.heartsPet == 5000 -> "adult"
+                            else -> "baby"
+                        }
+                    }
+                    if (updatedPet != null) {
+                        transaction.set(petRef, updatedPet.toMap())
+                    }
                 }
-                .addOnFailureListener { exception ->
-                    Log.e("VirtualPetFragment", "Error updating heart count", exception)
-                }
+                transaction.update(userRef, "hearts", userHeartCount)
+            }.addOnSuccessListener {
+                Log.d("VirtualPetFragment", "Pet and user data updated successfully")
+            }.addOnFailureListener { exception ->
+                Log.e("VirtualPetFragment", "Error updating pet and user data", exception)
+            }
+        }
+    }
+
+    private fun updateHeartDisplay() {
+        if (pets.isNotEmpty()) {
+            val pet = pets[currentPetIndex]
+            tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
+        } else {
+            tvHeartsUserGallery.text = "- / -"
         }
     }
 
@@ -239,7 +187,6 @@ class VirtualPetFragment : Fragment() {
             val userId = user.uid
             val userRef = db.collection("users").document(userId)
 
-            // Fetch heart count from user's document
             userRef.get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
@@ -269,44 +216,40 @@ class VirtualPetFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 pets.clear()
                 for (document in documents) {
-                    val petType = document.getString("type") ?: "adopt_a_pet"
-                    val hearts = document.getLong("hearts")?.toInt() ?: 0
-                    val maxHearts = when {
-                        hearts >= 5000 -> 5000
-                        hearts >= 3000 -> 5000
-                        else -> 3000
-                    }
+                    val petType = document.getString("type") ?: "unknown"
+                    val heartsPet = document.getLong("heartsPet") ?: 0
+                    val stage = document.getString("stage") ?: "baby"
                     val drawableResId = when (petType) {
-                        "Cat" -> when {
-                            hearts >= 5000 -> R.drawable.cat_adult
-                            hearts >= 3000 -> R.drawable.cat_teen
+                        "Cat" -> when (stage) {
+                            "teen" -> R.drawable.cat_teen
+                            "adult" -> R.drawable.cat_adult
                             else -> R.drawable.cat_baby
                         }
-                        "Dog" -> when {
-                            hearts >= 5000 -> R.drawable.dog_adult
-                            hearts >= 3000 -> R.drawable.dog_teen
+                        "Dog" -> when (stage) {
+                            "teen" -> R.drawable.dog_teen
+                            "adult" -> R.drawable.dog_adult
                             else -> R.drawable.dog_baby
                         }
-                        "Parrot" -> when {
-                            hearts >= 5000 -> R.drawable.parrot_adult
-                            hearts >= 3000 -> R.drawable.parrot_teen
+                        "Parrot" -> when (stage) {
+                            "teen" -> R.drawable.parrot_teen
+                            "adult" -> R.drawable.parrot_adult
                             else -> R.drawable.parrot_baby
                         }
                         else -> R.drawable.adopt_a_pet
                     }
-                    pets.add(Pet(petType, hearts, drawableResId, maxHearts))
+                    val maxHearts = when (stage) {
+                        "teen" -> 5000
+                        "adult" -> 5000
+                        else -> 3000
+                    }
+                    pets.add(PetData(petType, heartsPet.toInt(), drawableResId, maxHearts, stage))
                 }
-
                 if (pets.isNotEmpty()) {
                     currentPetIndex = 0
-                    petImageView.setImageResource(pets[currentPetIndex].drawableResId)
+                    updatePetImageView()
                     updateHeartDisplay()
-                } else {
-                    // No pets available, update display accordingly
-                    tvHeartsUserGallery.text = "- / -"
+                    updateButtonStates()
                 }
-
-                updateButtonStates()
             }
             .addOnFailureListener { exception ->
                 Log.e("VirtualPetFragment", "Error fetching pet data", exception)

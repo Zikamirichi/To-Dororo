@@ -7,15 +7,7 @@ data class PetShopItem(
     val type: String = "",
     val imageResId: Int = 0,
     val price: Int = 0
-) {
-    fun toMap(): Map<String, Any> {
-        return mapOf(
-            "type" to type,
-            "imageResId" to imageResId,
-            "price" to price
-        )
-    }
-}
+)
 
 // Data class for PetGallery
 data class PetGalleryItem(
