@@ -1,6 +1,7 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -153,6 +154,8 @@ class DetailActivity : AppCompatActivity() {
                     )
                         .addOnSuccessListener {
                             Toast.makeText(this, "Changes saved successfully!", Toast.LENGTH_SHORT).show()
+                            setResult(RESULT_OK)
+                            finish()
                         }
                         .addOnFailureListener { exception ->
                             Log.e("DetailActivity", "Error saving changes: ${exception.message}")

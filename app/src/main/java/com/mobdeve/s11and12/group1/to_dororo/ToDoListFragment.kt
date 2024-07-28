@@ -50,6 +50,11 @@ class ToDoListFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        fetchTodoItems() // Refresh the to-do items when the fragment is resumed
+    }
+
     private fun fetchTodoItems() {
         val currentUser = firebaseAuth.currentUser
         if (currentUser == null) {
@@ -94,6 +99,9 @@ class ToDoListFragment : Fragment() {
                 adapter = TodoAdapter(sortedItems)
                 recyclerView.adapter = adapter
             }
-
+            .addOnFailureListener { exception ->
+                // Handle failure
+                exception.printStackTrace()
+            }
     }
 }
