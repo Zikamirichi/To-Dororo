@@ -52,7 +52,6 @@ class VirtualPetFragment : Fragment() {
         rightButton = view.findViewById(R.id.ibRight_button)
         feedButton = view.findViewById<ImageButton>(R.id.ibFeed_button)
         heartCountTextView = view.findViewById(R.id.heart_count)
-        tvHeartsUserGallery = view.findViewById(R.id.tvHeartsUserGallery)
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance()
@@ -316,8 +315,8 @@ class VirtualPetFragment : Fragment() {
                         insertBabyImageToGallery(userId, pet) // Call this for every fetched pet
                     }
                 }
-                if (pets.isNotEmpty() && currentPetIndex >= pets.size) {
-                    currentPetIndex = pets.size - 1
+                if (pets.isNotEmpty()) {
+                    currentPetIndex = 0
                 }
                 updatePetImageView()
                 updateHeartDisplay()

@@ -117,7 +117,6 @@ class PetShopActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(this, "Not enough hearts to adopt the pet", Toast.LENGTH_SHORT).show()
                     }
-                    throw Exception("Not enough hearts to buy the pet")
                 }
             } else {
                 throw Exception("User document does not exist")
