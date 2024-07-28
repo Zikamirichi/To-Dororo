@@ -19,6 +19,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.firebase.auth.FirebaseAuth
+import android.view.Gravity
+
 
 class VirtualPetFragment : Fragment() {
     private val pets = mutableListOf<PetData>()
@@ -121,7 +123,8 @@ class VirtualPetFragment : Fragment() {
 
     private fun updatePetImageView() {
         if (pets.isNotEmpty() && currentPetIndex in pets.indices) {
-            petImageView.setImageResource(pets[currentPetIndex].drawableResId)
+            val pet = pets[currentPetIndex]
+            petImageView.setImageResource(pet.drawableResId)
         } else {
             petImageView.setImageResource(R.drawable.adopt_a_pet)
         }
@@ -186,9 +189,12 @@ class VirtualPetFragment : Fragment() {
             pet.drawableResId = newDrawableResId
         }
 
-        // Update the displayed heart count
+        // Update the displayed pet heart count immediately
+        tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
+
+        // Update the displayed user heart count immediately
         userHeartCount -= 100
-        updateHeartDisplay()
+        heartCountTextView.text = userHeartCount.toString()
 
         // If the pet has evolved, start evolve animation
         if (evolve) {
@@ -211,9 +217,6 @@ class VirtualPetFragment : Fragment() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             val userId = user.uid
-            Log.d("FirestorePaths", "User ID: $userId")
-            Log.d("FirestorePaths", "Pet ID: ${pet.id}")
-
             val userRef = db.collection("users").document(userId)
             val petRef = db.collection("users").document(userId).collection("pets").document(pet.id)
             val galleryRef = db.collection("users").document(userId).collection("gallery")
@@ -275,30 +278,44 @@ class VirtualPetFragment : Fragment() {
                                     } else {
                                         Log.d("VirtualPetFragment", "Pet not in baby stage")
                                     }
-                                }.addOnSuccessListener {
-                                    Log.d("VirtualPetFragment", "Transaction success!")
+                                }.addOnCompleteListener {
+                                    // After transaction, ensure the UI is updated to the correct pet
+                                    updatePetDisplay()
 
-                                    // Only update UI after successful transaction
-                                    fetchUserData()
-                                    updateHeartDisplay()
-                                    updatePetImageView()
-                                }.addOnFailureListener { e ->
-                                    Log.w("VirtualPetFragment", "Transaction failure.", e)
-                                    Toast.makeText(requireContext(), "Failed to update Firestore data.", Toast.LENGTH_SHORT).show()
+                                    if ((currentBabyImage == R.drawable.locked_petgallery.toLong() ||
+                                        currentTeenImage == R.drawable.locked_petgallery.toLong() ||
+                                        currentAdultImage == R.drawable.locked_petgallery.toLong()) && (evolve == true)) {
+                                        val toast = Toast.makeText(requireContext(), "                CONGRATULATIONS!\nYou unlocked a new memory! Check the Pet Gallery to see your pet memories!", Toast.LENGTH_LONG)
+                                        toast.setGravity(Gravity.CENTER, 0, 0)
+                                        toast.show()
+                                    }
                                 }
                             }
-                        }.addOnFailureListener { e ->
-                            Log.w("VirtualPetFragment", "Failed to fetch gallery document.", e)
-                            Toast.makeText(requireContext(), "Failed to fetch gallery document.", Toast.LENGTH_SHORT).show()
                         }
-                    } else {
-                        Log.w("VirtualPetFragment", "Gallery document not found for type: ${pet.type}")
-                        Toast.makeText(requireContext(), "Gallery document not found for this pet type.", Toast.LENGTH_SHORT).show()
                     }
-                }.addOnFailureListener { e ->
-                    Log.w("VirtualPetFragment", "Failed to query gallery document.", e)
-                    Toast.makeText(requireContext(), "Failed to query gallery document.", Toast.LENGTH_SHORT).show()
                 }
+        }
+    }
+
+    private fun updateHeartDisplay() {
+        if (pets.isNotEmpty() && currentPetIndex in pets.indices) {
+            val pet = pets[currentPetIndex]
+            tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
+        } else {
+            tvHeartsUserGallery.text = "-- / --"
+        }
+    }
+
+    private fun updatePetDisplay() {
+        if (pets.isNotEmpty() && currentPetIndex >= 0 && currentPetIndex < pets.size) {
+            val pet = pets[currentPetIndex]
+
+            petImageView.setImageResource(pet.drawableResId)
+            tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
+        } else {
+
+            petImageView.setImageResource(R.drawable.adopt_a_pet)
+            tvHeartsUserGallery.text = "-- / --"
         }
     }
 
@@ -342,7 +359,6 @@ class VirtualPetFragment : Fragment() {
                             if (currentBabyImage == R.drawable.locked_petgallery.toLong()) {
                                 db.runTransaction { transaction ->
                                     transaction.update(galleryDocRef, "babyImage", pet.drawableResId)
-                                    Log.d("VirtualPetFragment", "Baby image added/updated in gallery for pet type: ${pet.type}")
                                 }.addOnSuccessListener {
                                     Log.d("VirtualPetFragment", "Baby image successfully added/updated in gallery for pet type: ${pet.type}")
                                 }.addOnFailureListener { exception ->
@@ -386,14 +402,6 @@ class VirtualPetFragment : Fragment() {
         }
     }
 
-    private fun updateHeartDisplay() {
-        if (pets.isNotEmpty() && currentPetIndex in pets.indices) {
-            val pet = pets[currentPetIndex]
-            tvHeartsUserGallery.text = "${pet.heartsPet} / ${pet.maxHearts}"
-        } else {
-            tvHeartsUserGallery.text = "-- / --"
-        }
-    }
 
     private fun updateButtonStates() {
         leftButton.isEnabled = pets.size > 1

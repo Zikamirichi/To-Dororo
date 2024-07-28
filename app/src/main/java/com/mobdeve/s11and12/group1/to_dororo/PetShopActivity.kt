@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
+import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 
@@ -111,7 +112,9 @@ class PetShopActivity : AppCompatActivity() {
                     )
                     transaction.set(newPetRef, newPetData.toMap())
                     runOnUiThread {
-                        Toast.makeText(this, "Congratulations on your new pet!", Toast.LENGTH_SHORT).show()
+                        val toast = Toast.makeText(this, "  CONGRATULATIONS!\nYou adopted a new pet!", Toast.LENGTH_LONG)
+                        toast.setGravity(Gravity.CENTER, 0, 0)
+                        toast.show()
                     }
                 } else {
                     runOnUiThread {
