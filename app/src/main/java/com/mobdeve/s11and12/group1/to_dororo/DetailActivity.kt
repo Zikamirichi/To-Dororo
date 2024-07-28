@@ -4,8 +4,10 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,8 +26,10 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var totalTimeTextView: TextView
     private lateinit var noteEditText: EditText
     private lateinit var saveButton: Button
+    private lateinit var deleteButton: ImageButton
 
     private var currentTaskTitle: String? = null
+    private var viewOnly: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +43,14 @@ class DetailActivity : AppCompatActivity() {
         totalTimeTextView = findViewById(R.id.total_time_text)
         noteEditText = findViewById(R.id.note_edit_text)
         saveButton = findViewById(R.id.save_button)
+        deleteButton = findViewById(R.id.delete_button)
 
         currentTaskTitle = intent.getStringExtra("taskTitle")
+        viewOnly = intent.getBooleanExtra("viewOnly", false)
+
+        if (viewOnly) {
+            setViewOnlyMode()
+        }
 
         if (currentTaskTitle != null) {
             fetchTaskDetails(currentTaskTitle!!)
@@ -48,23 +58,23 @@ class DetailActivity : AppCompatActivity() {
             Log.e("DetailActivity", "Task title is null")
         }
 
-        dateTextView.setOnClickListener {
-            showDatePicker()
-        }
+        dateTextView.setOnClickListener { showDatePicker() }
 
-        saveButton.setOnClickListener {
-            saveChanges()
-        }
+        saveButton.setOnClickListener { saveChanges() }
+
+        deleteButton.setOnClickListener { markNoteAsCompleted() }
+    }
+
+    private fun setViewOnlyMode() {
+        taskTitleEditText.isEnabled = false
+        dateTextView.isClickable = false
+        noteEditText.isEnabled = false
+        saveButton.visibility = View.GONE
+        deleteButton.visibility = View.GONE
     }
 
     private fun fetchTaskDetails(taskTitle: String) {
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser == null) {
-            Log.e("DetailActivity", "User is not logged in.")
-            return
-        }
-
-        val userId = currentUser.uid
+        val userId = firebaseAuth.currentUser?.uid ?: return
 
         firestore.collection("users")
             .document(userId)
@@ -74,17 +84,19 @@ class DetailActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 if (result != null && !result.isEmpty) {
                     val document = result.documents[0]
-                    val title = document.getString("title") ?: ""
-                    val dateString = document.getString("date") ?: ""
-                    val totalTime = document.getString("totalTime") ?: ""
-                    val note = document.getString("body") ?: ""
+                    val title = document.getString("title")
+                    val dateString = document.getString("date")
+                    val totalTime = document.getString("totalTime")
+                    val note = document.getString("body")
 
                     val date = try {
                         SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString)
                     } catch (e: Exception) {
                         null
                     }
-                    val formattedDate = date?.let { SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(it) } ?: dateString
+                    val formattedDate = date?.let {
+                        SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(it)
+                    } ?: dateString
 
                     taskTitleEditText.setText(title)
                     dateTextView.text = "Date: $formattedDate"
@@ -113,7 +125,7 @@ class DetailActivity : AppCompatActivity() {
             val newDate = Calendar.getInstance()
             newDate.set(year, month, dayOfMonth)
             val formattedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(newDate.time)
-            dateTextView.text = "Date: ${SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(newDate.time)}"
+            dateTextView.text = "Date: " + SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(newDate.time)
         }
 
         DatePickerDialog(
@@ -145,21 +157,58 @@ class DetailActivity : AppCompatActivity() {
                 if (result != null && !result.isEmpty) {
                     val document = result.documents[0]
                     document.reference.update(
-                        mapOf(
-                            "title" to title,
-                            "date" to dateText,
-                            "totalTime" to totalTime,
-                            "body" to note
-                        )
-                    )
+                        "title", title,
+                        "date", dateText,
+                        "totalTime", totalTime,
+                        "body", note
+                    ).addOnSuccessListener {
+                        Toast.makeText(this, "Changes saved successfully!", Toast.LENGTH_SHORT).show()
+                        setResult(RESULT_OK)
+                        finish()
+                    }.addOnFailureListener { exception ->
+                        Log.e("DetailActivity", "Error saving changes: ${exception.message}")
+                        Toast.makeText(this, "Error saving changes. Please try again.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("DetailActivity", "No matching document found.")
+                    Toast.makeText(this, "Error: No matching document found.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("DetailActivity", "Error fetching document: ${exception.message}")
+                Toast.makeText(this, "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun markNoteAsCompleted() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            Log.e("DetailActivity", "User is not logged in.")
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .collection("notes")
+            .whereEqualTo("title", currentTaskTitle)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result != null && !result.isEmpty) {
+                    val document = result.documents[0]
+                    document.reference.update("isCompleted", true)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Changes saved successfully!", Toast.LENGTH_SHORT).show()
-                            setResult(RESULT_OK)
+                            Toast.makeText(this, "Task marked as completed!", Toast.LENGTH_SHORT).show()
+                            // Navigate back to the main menu
+                            val intent = Intent(this@DetailActivity, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
                             finish()
                         }
                         .addOnFailureListener { exception ->
-                            Log.e("DetailActivity", "Error saving changes: ${exception.message}")
-                            Toast.makeText(this, "Error saving changes. Please try again.", Toast.LENGTH_SHORT).show()
+                            Log.e("DetailActivity", "Error marking task as completed: ${exception.message}")
+                            Toast.makeText(this, "Error marking task as completed. Please try again.", Toast.LENGTH_SHORT).show()
                         }
                 } else {
                     Log.e("DetailActivity", "No matching document found.")
