@@ -19,7 +19,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
     private lateinit var firebaseAuth: FirebaseAuth
 
-    private lateinit var taskTitleTextView: TextView
+    private lateinit var taskTitleEditText: EditText
     private lateinit var dateTextView: TextView
     private lateinit var totalTimeTextView: TextView
     private lateinit var noteEditText: EditText
@@ -34,7 +34,7 @@ class DetailActivity : AppCompatActivity() {
         firestore = FirebaseFirestore.getInstance()
         firebaseAuth = FirebaseAuth.getInstance()
 
-        taskTitleTextView = findViewById(R.id.todo_title)
+        taskTitleEditText = findViewById(R.id.todo_title)
         dateTextView = findViewById(R.id.date_text)
         totalTimeTextView = findViewById(R.id.total_time_text)
         noteEditText = findViewById(R.id.note_edit_text)
@@ -86,13 +86,13 @@ class DetailActivity : AppCompatActivity() {
                     }
                     val formattedDate = date?.let { SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(it) } ?: dateString
 
-                    taskTitleTextView.text = title
+                    taskTitleEditText.setText(title)
                     dateTextView.text = "Date: $formattedDate"
                     totalTimeTextView.text = "Total: $totalTime"
                     noteEditText.setText(note)
                 } else {
                     Log.e("DetailActivity", "No matching document found.")
-                    taskTitleTextView.text = "N/A"
+                    taskTitleEditText.setText("N/A")
                     dateTextView.text = "Date: N/A"
                     totalTimeTextView.text = "Total: N/A"
                     noteEditText.setText("")
@@ -100,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.e("DetailActivity", "Error fetching document: ${exception.message}")
-                taskTitleTextView.text = "N/A"
+                taskTitleEditText.setText("N/A")
                 dateTextView.text = "Date: N/A"
                 totalTimeTextView.text = "Total: N/A"
                 noteEditText.setText("")
@@ -123,7 +123,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun saveChanges() {
-        val title = taskTitleTextView.text.toString()
+        val title = taskTitleEditText.text.toString()
         val dateText = dateTextView.text.toString().removePrefix("Date: ").trim()
         val totalTime = totalTimeTextView.text.toString().removePrefix("Total: ").trim()
         val note = noteEditText.text.toString()
@@ -162,13 +162,13 @@ class DetailActivity : AppCompatActivity() {
                             Toast.makeText(this, "Error saving changes. Please try again.", Toast.LENGTH_SHORT).show()
                         }
                 } else {
-                    Log.e("DetailActivity", "No matching document found for update.")
-                    Toast.makeText(this, "Error: Task not found.", Toast.LENGTH_SHORT).show()
+                    Log.e("DetailActivity", "No matching document found.")
+                    Toast.makeText(this, "Error: No matching document found.", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("DetailActivity", "Error fetching document for update: ${exception.message}")
-                Toast.makeText(this, "Error fetching data. Please try again.", Toast.LENGTH_SHORT).show()
+                Log.e("DetailActivity", "Error fetching document: ${exception.message}")
+                Toast.makeText(this, "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
             }
     }
 }
