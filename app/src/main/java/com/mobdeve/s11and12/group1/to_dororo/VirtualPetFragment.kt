@@ -186,10 +186,6 @@ class VirtualPetFragment : Fragment() {
             pet.drawableResId = newDrawableResId
         }
 
-        // Deduct hearts from user
-        userHeartCount -= 100
-        heartCountTextView.text = userHeartCount.toString()
-
         // Update the displayed heart count
         updateHeartDisplay()
 
@@ -279,24 +275,28 @@ class VirtualPetFragment : Fragment() {
                                         Log.d("VirtualPetFragment", "Pet not in baby stage")
                                     }
                                 }.addOnSuccessListener {
-                                    Log.d("VirtualPetFragment", "Pet, user data, and gallery updated successfully")
-                                    // Fetch the entire pet list to reflect any updates
-                                    fetchPetData(userId)
-                                }.addOnFailureListener { exception ->
-                                    Log.e("VirtualPetFragment", "Error updating pet, user data, or gallery", exception)
+                                    Log.d("VirtualPetFragment", "Transaction success!")
+
+                                    // Only update userHeartCount and UI after successful transaction
+                                    userHeartCount -= 100
+                                    updateHeartDisplay()
+                                    updatePetImageView()
+                                }.addOnFailureListener { e ->
+                                    Log.w("VirtualPetFragment", "Transaction failure.", e)
+                                    Toast.makeText(requireContext(), "Failed to update Firestore data.", Toast.LENGTH_SHORT).show()
                                 }
-                            } else {
-                                Log.e("VirtualPetFragment", "No matching gallery document found")
                             }
-                        }.addOnFailureListener { exception ->
-                            Log.e("VirtualPetFragment", "Error querying gallery documents", exception)
+                        }.addOnFailureListener { e ->
+                            Log.w("VirtualPetFragment", "Failed to fetch gallery document.", e)
+                            Toast.makeText(requireContext(), "Failed to fetch gallery document.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        Log.e("VirtualPetFragment", "No matching gallery document found")
+                        Log.w("VirtualPetFragment", "Gallery document not found for type: ${pet.type}")
+                        Toast.makeText(requireContext(), "Gallery document not found for this pet type.", Toast.LENGTH_SHORT).show()
                     }
-                }
-                .addOnFailureListener { exception ->
-                    Log.e("VirtualPetFragment", "Error querying gallery documents", exception)
+                }.addOnFailureListener { e ->
+                    Log.w("VirtualPetFragment", "Failed to query gallery document.", e)
+                    Toast.makeText(requireContext(), "Failed to query gallery document.", Toast.LENGTH_SHORT).show()
                 }
         }
     }
