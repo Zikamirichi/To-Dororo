@@ -64,6 +64,15 @@ class PetGalleryActivity : AppCompatActivity() {
                     // Add item to list
                     petGalleryList.add(PetGalleryItem(title, babyImage, teenImage, adultImage))
                 }
+
+                petGalleryList.sortBy { item ->
+                    when (item.type) {
+                        "Cat" -> 0
+                        "Dog" -> 1
+                        "Parrot" -> 2
+                        else -> 3
+                    }
+                }
                 petGalleryAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
