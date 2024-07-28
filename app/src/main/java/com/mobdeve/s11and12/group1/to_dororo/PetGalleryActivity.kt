@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.auth.FirebaseAuth
 import android.util.Log
+import android.widget.TextView
 
 class PetGalleryActivity : AppCompatActivity() {
 
@@ -18,6 +19,7 @@ class PetGalleryActivity : AppCompatActivity() {
     private val petGalleryList = mutableListOf<PetGalleryItem>()
     private lateinit var db: FirebaseFirestore
     private val user = FirebaseAuth.getInstance().currentUser
+    private lateinit var tvHeartsUserGallery: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,9 +37,12 @@ class PetGalleryActivity : AppCompatActivity() {
         petGalleryAdapter = PetGalleryAdapter(this, petGalleryList)
         recyclerView.adapter = petGalleryAdapter
 
+        tvHeartsUserGallery = findViewById(R.id.tvHeartsUserGallery)
+
         db = FirebaseFirestore.getInstance()
 
         fetchPetGalleryData()
+        fetchUserHearts()
     }
 
     private fun fetchPetGalleryData() {
@@ -65,4 +70,16 @@ class PetGalleryActivity : AppCompatActivity() {
                 Log.e("PetGalleryActivity", "Error fetching pet gallery data", exception)
             }
     }
+
+    private fun fetchUserHearts() {
+        val userId = user?.uid ?: return
+        val userRef = db.collection("users").document(userId)
+
+        userRef.get()
+            .addOnSuccessListener { document ->
+                val hearts = document?.getLong("hearts") ?: 0
+                tvHeartsUserGallery.text = "$hearts"
+            }
+    }
+
 }

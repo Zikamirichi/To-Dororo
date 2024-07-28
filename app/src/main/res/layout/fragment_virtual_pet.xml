@@ -135,7 +135,7 @@
         android:id="@+id/ivHeartsUserGallery"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="6dp"
         android:layout_marginLeft="15dp"
         android:src="@drawable/heart"
         app:layout_constraintStart_toStartOf="@+id/tvHeartsUserGallery"
