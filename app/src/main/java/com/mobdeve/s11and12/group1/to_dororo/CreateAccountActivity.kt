@@ -100,6 +100,7 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun createDefaultSubcollections(userId: String) {
+
         val historyMap = hashMapOf(
             "body" to "",
             "date" to "",
@@ -110,8 +111,9 @@ class CreateAccountActivity : AppCompatActivity() {
         val notesMap = hashMapOf(
             "body" to "",
             "date" to "",
-            "title" to "",
-            "totalTime" to ""
+            "isCompleted" to false,
+            "title" to "To Do Title",
+            "totalTime" to "Total: N/A"
         )
 
 //        val petsMap = hashMapOf(

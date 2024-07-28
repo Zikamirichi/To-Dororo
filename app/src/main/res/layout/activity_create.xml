@@ -133,27 +133,20 @@
             android:layout_marginEnd="16dp">
 
             <!-- Middle part: Title of the to-do list -->
-            <TextView
+            <EditText
                 android:id="@+id/todo_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Task Title"
+                android:hint="Insert Title Here"
                 android:textSize="18sp"
                 android:fontFamily="@font/archivo"
                 android:textColor="@android:color/black"
-                android:gravity="center" />
-
-            <!-- Right part: Delete button -->
-            <ImageButton
-                android:id="@+id/delete_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="bottom"
-                android:background="@android:color/transparent"
-                android:contentDescription="Delete Button"
-                android:scaleType="fitCenter"
-                android:src="@drawable/delete" />
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:background="@null"
+                android:layout_margin="16dp"
+                android:singleLine="true"
+                android:inputType="textCapWords" />
         </LinearLayout>
 
         <!-- Date section -->
