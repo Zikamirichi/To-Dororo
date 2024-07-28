@@ -187,6 +187,7 @@ class VirtualPetFragment : Fragment() {
         }
 
         // Update the displayed heart count
+        userHeartCount -= 100
         updateHeartDisplay()
 
         // If the pet has evolved, start evolve animation
@@ -277,8 +278,8 @@ class VirtualPetFragment : Fragment() {
                                 }.addOnSuccessListener {
                                     Log.d("VirtualPetFragment", "Transaction success!")
 
-                                    // Only update userHeartCount and UI after successful transaction
-                                    userHeartCount -= 100
+                                    // Only update UI after successful transaction
+                                    fetchUserData()
                                     updateHeartDisplay()
                                     updatePetImageView()
                                 }.addOnFailureListener { e ->
