@@ -5,7 +5,7 @@
     android:id="@+id/user_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!-- Container for main content -->
+
 
     <LinearLayout
         android:id="@+id/content_container"
@@ -17,14 +17,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Content of your ToDo list -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <!-- Left part: History icon -->
             <ImageButton
                 android:id="@+id/history_icon"
                 android:layout_width="50dp"
@@ -37,7 +35,6 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/history" />
 
-            <!-- Middle part: title and heart box -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -46,14 +43,13 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- Black box with heart icon and count -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="-1dp"
                     android:background="@drawable/rounded_black_background"
                     android:orientation="horizontal"
-                    android:padding="8dp"> <!-- Adjusted margin to remove space -->
+                    android:padding="8dp">
 
                     <ImageView
                         android:id="@+id/heart_icon"
@@ -78,7 +74,6 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
-                <!-- Main box with title -->
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -97,7 +92,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- Right part: Help icon -->
             <ImageButton
                 android:id="@+id/help_icon"
                 android:layout_width="50dp"
