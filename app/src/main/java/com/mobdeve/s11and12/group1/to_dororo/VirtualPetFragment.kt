@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +28,7 @@ class VirtualPetFragment : Fragment() {
     private lateinit var tvHeartsUserGallery: TextView
     private lateinit var leftButton: ImageButton
     private lateinit var rightButton: ImageButton
+    private lateinit var feedButton: ImageButton
     private lateinit var petImageView: ImageView
     private var userHeartCount: Long = 0
 
@@ -41,12 +44,13 @@ class VirtualPetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_virtual_pet, container, false)
+        val buttonAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.button_animation)
 
         // Initialize views
         petImageView = view.findViewById(R.id.ivPet01)
         leftButton = view.findViewById(R.id.ibLeft_button)
         rightButton = view.findViewById(R.id.ibRight_button)
-        val feedButton = view.findViewById<ImageButton>(R.id.ibFeed_button)
+        feedButton = view.findViewById<ImageButton>(R.id.ibFeed_button)
         heartCountTextView = view.findViewById(R.id.heart_count)
         tvHeartsUserGallery = view.findViewById(R.id.tvHeartsUserGallery)
 
@@ -54,9 +58,16 @@ class VirtualPetFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
 
         // Set button click listeners
-        leftButton.setOnClickListener { switchPet(-1) }
-        rightButton.setOnClickListener { switchPet(1) }
-        feedButton.setOnClickListener { feedPet() }
+
+        leftButton.setOnClickListener {
+            it.startAnimation(buttonAnimation)
+            switchPet(-1) }
+        rightButton.setOnClickListener {
+            it.startAnimation(buttonAnimation)
+            switchPet(1) }
+        feedButton.setOnClickListener {
+            it.startAnimation(buttonAnimation)
+            feedPet() }
 
         // Existing button setups
         setupOtherButtons(view)
@@ -74,10 +85,37 @@ class VirtualPetFragment : Fragment() {
 
     private fun switchPet(direction: Int) {
         if (pets.isNotEmpty()) {
-            currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
-            updatePetImageView()
+            val slideOutAnim = if (direction > 0) {
+                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_left)
+            } else {
+                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_out_right)
+            }
+            val slideInAnim = if (direction > 0) {
+                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right)
+            } else {
+                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left)
+            }
+
+            slideOutAnim.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    // Update the pet index and image after the slide out animation ends
+                    currentPetIndex = (currentPetIndex + direction + pets.size) % pets.size
+                    updatePetImageView()
+                    updateHeartDisplay()
+
+                    // Start the slide in animation after updating the image
+                    petImageView.startAnimation(slideInAnim)
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
+
+            // Start the slide out animation
+            petImageView.startAnimation(slideOutAnim)
+
             updateButtonStates()
-            updateHeartDisplay()
         }
     }
 
@@ -114,6 +152,7 @@ class VirtualPetFragment : Fragment() {
 
         var imageField = ""
         var newDrawableResId = pet.drawableResId
+        var evolve = false
 
         // Handle evolution stages
         if (pet.heartsPet >= pet.maxHearts) {
@@ -129,6 +168,7 @@ class VirtualPetFragment : Fragment() {
                     }
                     pet.stage = "teen"
                     imageField = "teenImage"
+                    evolve = true
                 }
                 5000 -> { // Evolve from Teen to Adult
                     pet.heartsPet = 5000 // Reset hearts to max for Adult stage
@@ -140,6 +180,7 @@ class VirtualPetFragment : Fragment() {
                     }
                     pet.stage = "adult"
                     imageField = "adultImage"
+                    evolve = true
                 }
             }
             pet.drawableResId = newDrawableResId
@@ -151,6 +192,23 @@ class VirtualPetFragment : Fragment() {
 
         // Update the displayed heart count
         updateHeartDisplay()
+
+        // If the pet has evolved, start evolve animation
+        if (evolve) {
+            petImageView.visibility = View.INVISIBLE
+            val evolveAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.evolve_animation)
+            evolveAnimation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+
+                override fun onAnimationEnd(animation: Animation) {
+                    petImageView.setImageResource(newDrawableResId)
+                    petImageView.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {}
+            })
+            petImageView.startAnimation(evolveAnimation)
+        }
 
         // Update Firestore with new pet and user data
         val user = FirebaseAuth.getInstance().currentUser
@@ -308,10 +366,6 @@ class VirtualPetFragment : Fragment() {
     }
 
 
-
-
-
-
     private fun fetchUserData() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
@@ -347,22 +401,28 @@ class VirtualPetFragment : Fragment() {
 
     private fun setupOtherButtons(view: View) {
         val helpView = view.findViewById<ImageButton>(R.id.help_icon)
+        val buttonAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.button_animation)
+
         helpView.setOnClickListener {
+            it.startAnimation(buttonAnimation)
             startActivity(Intent(requireContext(), HelpActivity::class.java))
         }
 
         val storeView = view.findViewById<ImageButton>(R.id.ibPetShop)
         storeView.setOnClickListener {
+            it.startAnimation(buttonAnimation)
             petShopActivityResultLauncher.launch(Intent(requireContext(), PetShopActivity::class.java))
         }
 
         val galleryView = view.findViewById<ImageButton>(R.id.ibGallery)
         galleryView.setOnClickListener {
+            it.startAnimation(buttonAnimation)
             startActivity(Intent(requireContext(), PetGalleryActivity::class.java))
         }
 
         val historyButton = view.findViewById<ImageButton>(R.id.history_icon)
         historyButton.setOnClickListener {
+            it.startAnimation(buttonAnimation)
             startActivity(Intent(requireContext(), HistoryActivity::class.java))
         }
     }
