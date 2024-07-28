@@ -112,31 +112,37 @@ class VirtualPetFragment : Fragment() {
         // Increase hearts and handle evolution stages
         pet.heartsPet += 100
 
+        var imageField = ""
+        var newDrawableResId = pet.drawableResId
+
         // Handle evolution stages
         if (pet.heartsPet >= pet.maxHearts) {
             when (pet.maxHearts) {
                 3000 -> { // Evolve from Baby to Teen
                     pet.maxHearts = 5000
                     pet.heartsPet = 0 // Reset hearts for the Teen stage
-                    pet.drawableResId = when (pet.type) {
+                    newDrawableResId = when (pet.type) {
                         "Cat" -> R.drawable.cat_teen
                         "Dog" -> R.drawable.dog_teen
                         "Parrot" -> R.drawable.parrot_teen
                         else -> R.drawable.adopt_a_pet
                     }
                     pet.stage = "teen"
+                    imageField = "teenImage"
                 }
                 5000 -> { // Evolve from Teen to Adult
                     pet.heartsPet = 5000 // Reset hearts to max for Adult stage
-                    pet.drawableResId = when (pet.type) {
+                    newDrawableResId = when (pet.type) {
                         "Cat" -> R.drawable.cat_adult
                         "Dog" -> R.drawable.dog_adult
                         "Parrot" -> R.drawable.parrot_adult
                         else -> R.drawable.adopt_a_pet
                     }
                     pet.stage = "adult"
+                    imageField = "adultImage"
                 }
             }
+            pet.drawableResId = newDrawableResId
         }
 
         // Deduct hearts from user
@@ -163,38 +169,69 @@ class VirtualPetFragment : Fragment() {
                     if (querySnapshot.documents.isNotEmpty()) {
                         val galleryDocRef = querySnapshot.documents[0].reference
 
-                        db.runTransaction { transaction ->
-                            val petDocument = transaction.get(petRef)
-                            if (petDocument.exists()) {
-                                val updatedPet = petDocument.toObject(PetData::class.java)?.apply {
-                                    heartsPet = pet.heartsPet
-                                    maxHearts = pet.maxHearts
-                                    drawableResId = pet.drawableResId
-                                    stage = pet.stage
-                                }
-                                if (updatedPet != null) {
-                                    transaction.set(petRef, updatedPet.toMap())
-                                }
-                            }
-                            transaction.update(userRef, "hearts", userHeartCount)
+                        // Fetch gallery document first before performing the transaction
+                        galleryDocRef.get().addOnSuccessListener { galleryDocSnapshot ->
+                            if (galleryDocSnapshot.exists()) {
+                                val currentBabyImage = galleryDocSnapshot.getLong("babyImage")
+                                val currentTeenImage = galleryDocSnapshot.getLong("teenImage")
+                                val currentAdultImage = galleryDocSnapshot.getLong("adultImage")
 
-                            // Update the gallery document based on pet stage
-                            transaction.update(
-                                galleryDocRef,
-                                when (pet.stage) {
-                                    "baby" -> "babyImage"
-                                    "teen" -> "teenImage"
-                                    "adult" -> "adultImage"
-                                    else -> throw IllegalArgumentException("Unknown stage: ${pet.stage}")
-                                },
-                                pet.drawableResId
-                            )
-                        }.addOnSuccessListener {
-                            Log.d("VirtualPetFragment", "Pet, user data, and gallery updated successfully")
-                            // Fetch the entire pet list to reflect any updates
-                            fetchPetData(userId)
+                                db.runTransaction { transaction ->
+                                    val petDocument = transaction.get(petRef)
+                                    if (petDocument.exists()) {
+                                        val updatedPet = petDocument.toObject(PetData::class.java)?.apply {
+                                            heartsPet = pet.heartsPet
+                                            maxHearts = pet.maxHearts
+                                            drawableResId = pet.drawableResId
+                                            stage = pet.stage
+                                        }
+                                        if (updatedPet != null) {
+                                            transaction.set(petRef, updatedPet.toMap())
+                                        }
+                                    }
+                                    transaction.update(userRef, "hearts", userHeartCount)
+
+                                    // Update the gallery document based on pet stage
+                                    if (imageField.isNotEmpty()) {
+                                        when (imageField) {
+                                            "teenImage" -> if (currentTeenImage == R.drawable.locked_petgallery.toLong()) {
+                                                transaction.update(galleryDocRef, imageField, newDrawableResId)
+                                            } else {
+                                                Log.d("VirtualPetFragment", "TEENIMAGE IS NOT R.drawable.locked_petgallery.toLong()")
+                                            }
+
+                                            "adultImage" -> if (currentAdultImage == R.drawable.locked_petgallery.toLong()) {
+                                                transaction.update(galleryDocRef, imageField, newDrawableResId)
+                                            } else {
+                                                Log.d("VirtualPetFragment", "ADULTIMAGE IS NOT R.drawable.locked_petgallery.toLong()")
+                                            }
+
+                                            else -> {
+                                                Log.d("VirtualPetFragment", "WHEN !imageField")
+                                            }
+                                        }
+                                    } else if (pet.stage == "baby") {
+                                        // Ensure babyImage is updated if the pet is still in the baby stage
+                                        if (currentBabyImage == R.drawable.locked_petgallery.toLong()) {
+                                            transaction.update(galleryDocRef, "babyImage", pet.drawableResId)
+                                        } else {
+                                            Log.d("VirtualPetFragment", "currentBabyImage IS NOT R.drawable.locked_petgallery.toLong()")
+                                        }
+                                    } else {
+                                        Log.d("VirtualPetFragment", "Pet not in baby stage")
+                                    }
+                                }.addOnSuccessListener {
+                                    Log.d("VirtualPetFragment", "Pet, user data, and gallery updated successfully")
+                                    // Fetch the entire pet list to reflect any updates
+                                    fetchPetData(userId)
+                                }.addOnFailureListener { exception ->
+                                    Log.e("VirtualPetFragment", "Error updating pet, user data, or gallery", exception)
+                                }
+                            } else {
+                                Log.e("VirtualPetFragment", "No matching gallery document found")
+                            }
                         }.addOnFailureListener { exception ->
-                            Log.e("VirtualPetFragment", "Error updating pet, user data, or gallery", exception)
+                            Log.e("VirtualPetFragment", "Error querying gallery documents", exception)
                         }
                     } else {
                         Log.e("VirtualPetFragment", "No matching gallery document found")
@@ -206,6 +243,7 @@ class VirtualPetFragment : Fragment() {
         }
     }
 
+
     private fun fetchPetData(userId: String) {
         db.collection("users").document(userId).collection("pets")
             .orderBy("order", com.google.firebase.firestore.Query.Direction.DESCENDING) // Sort by order
@@ -216,6 +254,8 @@ class VirtualPetFragment : Fragment() {
                     val pet = document.toObject(PetData::class.java)
                     if (pet != null) {
                         pets.add(pet)
+                        Log.d("VirtualPetFragment", "Fetched pet: ${pet.id} - ${pet.type} - ${pet.stage}")
+                        insertBabyImageToGallery(userId, pet) // Call this for every fetched pet
                     }
                 }
                 if (pets.isNotEmpty() && currentPetIndex >= pets.size) {
@@ -229,6 +269,45 @@ class VirtualPetFragment : Fragment() {
                 Log.e("VirtualPetFragment", "Error fetching pet data", exception)
             }
     }
+
+    private fun insertBabyImageToGallery(userId: String, pet: PetData) {
+        val galleryRef = db.collection("users").document(userId).collection("gallery")
+        galleryRef.whereEqualTo("title", pet.type).limit(1).get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.documents.isNotEmpty()) {
+                    val galleryDocRef = querySnapshot.documents[0].reference
+
+                    galleryDocRef.get().addOnSuccessListener { galleryDocSnapshot ->
+                        if (galleryDocSnapshot.exists()) {
+                            val currentBabyImage = galleryDocSnapshot.getLong("babyImage")
+                            if (currentBabyImage == R.drawable.locked_petgallery.toLong()) {
+                                db.runTransaction { transaction ->
+                                    transaction.update(galleryDocRef, "babyImage", pet.drawableResId)
+                                    Log.d("VirtualPetFragment", "Baby image added/updated in gallery for pet type: ${pet.type}")
+                                }.addOnSuccessListener {
+                                    Log.d("VirtualPetFragment", "Baby image successfully added/updated in gallery for pet type: ${pet.type}")
+                                }.addOnFailureListener { exception ->
+                                    Log.e("VirtualPetFragment", "Error adding/updating baby image in gallery", exception)
+                                }
+                            } else {
+                                Log.d("VirtualPetFragment", "Baby image already exists and is not the placeholder for pet type: ${pet.type}")
+                            }
+                        } else {
+                            Log.e("VirtualPetFragment", "No matching gallery document found to update for pet type: ${pet.type}")
+                        }
+                    }.addOnFailureListener { exception ->
+                        Log.e("VirtualPetFragment", "Error querying gallery documents", exception)
+                    }
+                } else {
+                    Log.e("VirtualPetFragment", "No matching gallery document found to update for pet type: ${pet.type}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("VirtualPetFragment", "Error querying gallery documents", exception)
+            }
+    }
+
+
 
 
 
