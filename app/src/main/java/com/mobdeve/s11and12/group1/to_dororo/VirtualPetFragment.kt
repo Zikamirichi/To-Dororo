@@ -52,6 +52,7 @@ class VirtualPetFragment : Fragment() {
         rightButton = view.findViewById(R.id.ibRight_button)
         feedButton = view.findViewById<ImageButton>(R.id.ibFeed_button)
         heartCountTextView = view.findViewById(R.id.heart_count)
+        tvHeartsUserGallery = view.findViewById(R.id.tvHeartsUserGallery)
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance()
