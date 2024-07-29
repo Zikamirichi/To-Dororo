@@ -22,6 +22,7 @@ class CreateActivity : AppCompatActivity() {
     private lateinit var totalTextView: TextView
     private lateinit var titleEditText: EditText
     private lateinit var noteEditText: EditText
+    private lateinit var heartCountTextView: TextView
     private lateinit var calendar: Calendar
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
@@ -40,6 +41,7 @@ class CreateActivity : AppCompatActivity() {
         totalTextView = findViewById(R.id.total_time_text)
         titleEditText = findViewById(R.id.todo_title)
         noteEditText = findViewById(R.id.note_edit_text)
+        heartCountTextView = findViewById(R.id.heart_count)
         val helpButton = findViewById<ImageButton>(R.id.help_icon)
         val historyButton = findViewById<ImageButton>(R.id.history_icon)
         val saveButton = findViewById<Button>(R.id.save_button)
@@ -47,6 +49,9 @@ class CreateActivity : AppCompatActivity() {
         // Set initial date to today
         calendar = Calendar.getInstance()
         updateDateText(calendar.time)
+
+        // Fetch and display the number of hearts
+        fetchHeartCount()
 
         // For History Button
         historyButton.setOnClickListener {
@@ -103,6 +108,30 @@ class CreateActivity : AppCompatActivity() {
 
     private fun updateTotalTimeText(time: String) {
         totalTextView.text = time
+    }
+
+    private fun fetchHeartCount() {
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            val userUid = currentUser.uid
+            db.collection("users").document(userUid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val hearts = document.getLong("hearts") ?: 0
+                        heartCountTextView.text = "$hearts"
+                    } else {
+                        heartCountTextView.text = "0"
+                    }
+                }
+                .addOnFailureListener { e ->
+                    e.printStackTrace()
+                    heartCountTextView.text = "0"
+                }
+        } else {
+            heartCountTextView.text = "0"
+        }
     }
 
     private fun saveNote() {

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ class ToDoListFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TodoAdapter
+    private lateinit var heartCountTextView: TextView
     private val firestore = FirebaseFirestore.getInstance()
     private val firebaseAuth = FirebaseAuth.getInstance()
 
@@ -30,7 +32,10 @@ class ToDoListFragment : Fragment() {
         recyclerView = view.findViewById(R.id.recycler_view_todo)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        heartCountTextView = view.findViewById(R.id.heart_count)
+
         fetchTodoItems()
+        fetchHeartCount()
 
         val helpView = view.findViewById<ImageButton>(R.id.help_icon)
         helpView.setOnClickListener {
@@ -53,6 +58,7 @@ class ToDoListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         fetchTodoItems() // Refresh the to-do items when the fragment is resumed
+        fetchHeartCount() // Refresh the heart count when the fragment is resumed
     }
 
     private fun fetchTodoItems() {
@@ -82,9 +88,19 @@ class ToDoListFragment : Fragment() {
                     }
                     val formattedDate = date?.let { SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(it) } ?: dateString
                     val isCompleted = document.getBoolean("isCompleted") ?: false
-                    val todoItem = TodoItem(title, formattedDate, isCompleted = isCompleted)
 
-                    dateMap.getOrPut(formattedDate) { mutableListOf() }.add(todoItem)
+                    // Check if the date is before today
+                    val today = Calendar.getInstance().time
+                    if (date != null && date.before(today)) {
+                        firestore.collection("users")
+                            .document(userId)
+                            .collection("notes")
+                            .document(document.id)
+                            .update("isCompleted", true)
+                    } else {
+                        val todoItem = TodoItem(title, formattedDate, isCompleted = isCompleted)
+                        dateMap.getOrPut(formattedDate) { mutableListOf() }.add(todoItem)
+                    }
                 }
 
                 // Sort dates and create list
@@ -98,6 +114,28 @@ class ToDoListFragment : Fragment() {
 
                 adapter = TodoAdapter(sortedItems)
                 recyclerView.adapter = adapter
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure
+                exception.printStackTrace()
+            }
+    }
+
+    private fun fetchHeartCount() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            // Handle case where user is not logged in
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val heartCount = document.getLong("hearts") ?: 0
+                heartCountTextView.text = heartCount.toString()
             }
             .addOnFailureListener { exception ->
                 // Handle failure

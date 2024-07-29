@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -17,12 +18,14 @@ class HistoryActivity : AppCompatActivity() {
     private val taskList: MutableList<HistoryTask> = mutableListOf()
     private val firestore = FirebaseFirestore.getInstance()
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private lateinit var heartCountTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
         recyclerView = findViewById(R.id.recycler_view)
+        heartCountTextView = findViewById(R.id.heart_count)
         val clearButton: Button = findViewById(R.id.clear_button)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -34,6 +37,7 @@ class HistoryActivity : AppCompatActivity() {
         }
 
         fetchCompletedTasks()
+        fetchHeartCount()
     }
 
     private fun fetchCompletedTasks() {
@@ -82,6 +86,32 @@ class HistoryActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 // Handle any errors here
+            }
+    }
+
+    private fun fetchHeartCount() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            // Handle case where user is not logged in
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val hearts = document.getLong("hearts") ?: 0
+                    heartCountTextView.text = "$hearts"
+                } else {
+                    heartCountTextView.text = "0"
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Handle any errors here
+                heartCountTextView.text = "0"
             }
     }
 
