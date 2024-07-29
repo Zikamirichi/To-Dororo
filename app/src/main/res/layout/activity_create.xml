@@ -135,18 +135,15 @@
             <!-- Middle part: Title of the to-do list -->
             <EditText
                 android:id="@+id/todo_title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Insert Title Here"
+                android:layout_weight="1"
+                android:text="To-Do"
                 android:textSize="18sp"
                 android:fontFamily="@font/archivo"
+                android:gravity="center"
                 android:textColor="@android:color/black"
-                android:gravity="center_vertical"
-                android:padding="16dp"
-                android:background="@null"
-                android:layout_margin="16dp"
-                android:singleLine="true"
-                android:inputType="textCapWords" />
+                android:background="@null" />
         </LinearLayout>
 
         <!-- Date section -->
