@@ -49,6 +49,7 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
         }
     }
 
+    // HistoryTaskAdapter.kt
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val activityButton: Button = itemView.findViewById(R.id.activity_button)
 
@@ -58,11 +59,13 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
                 val intent = Intent(itemView.context, DetailActivity::class.java).apply {
                     putExtra("taskTitle", historyTask.title)
                     putExtra("date", historyTask.date)
+                    putExtra("viewOnly", true) // Set to true for view-only mode
                 }
                 itemView.context.startActivity(intent)
             }
         }
     }
+
 
     fun clearTasks() {
         taskList.clear()

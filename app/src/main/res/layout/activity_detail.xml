@@ -131,16 +131,17 @@
             android:layout_marginEnd="16dp">
 
             <!-- Middle part: Title of the to-do list -->
-            <TextView
+            <EditText
                 android:id="@+id/todo_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Task Title"
+                android:text="To-Do"
                 android:textSize="18sp"
                 android:fontFamily="@font/archivo"
+                android:gravity="center"
                 android:textColor="@android:color/black"
-                android:gravity="center" />
+                android:background="@null" />
 
             <!-- Right part: Delete button -->
             <ImageButton
@@ -153,6 +154,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/delete" />
         </LinearLayout>
+
 
         <!-- Date section -->
         <TextView
