@@ -30,6 +30,7 @@ class DetailActivity : AppCompatActivity() {
 
     private var currentTaskTitle: String? = null
     private var viewOnly: Boolean = false
+    private lateinit var mainContentView: View // Add this line
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +45,7 @@ class DetailActivity : AppCompatActivity() {
         noteEditText = findViewById(R.id.note_edit_text)
         saveButton = findViewById(R.id.save_button)
         deleteButton = findViewById(R.id.delete_button)
+        mainContentView = findViewById(R.id.body_container) // Initialize the main content view
 
         currentTaskTitle = intent.getStringExtra("taskTitle")
         viewOnly = intent.getBooleanExtra("viewOnly", false)
@@ -56,6 +58,12 @@ class DetailActivity : AppCompatActivity() {
             fetchTaskDetails(currentTaskTitle!!)
         } else {
             Log.e("DetailActivity", "Task title is null")
+        }
+
+        findViewById<TextView>(R.id.set_timer_text).setOnClickListener {
+            currentTaskTitle?.let { title ->
+                openPomodoroTimer(title)
+            } ?: Log.e("DetailActivity", "Current task title is null")
         }
 
         dateTextView.setOnClickListener { showDatePicker() }
@@ -200,11 +208,7 @@ class DetailActivity : AppCompatActivity() {
                     document.reference.update("isCompleted", true)
                         .addOnSuccessListener {
                             Toast.makeText(this, "Task marked as completed!", Toast.LENGTH_SHORT).show()
-                            // Navigate back to the main menu
-                            val intent = Intent(this@DetailActivity, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
-                            finish()
+                            addHeartsToUser(userId, 100)
                         }
                         .addOnFailureListener { exception ->
                             Log.e("DetailActivity", "Error marking task as completed: ${exception.message}")
@@ -220,4 +224,34 @@ class DetailActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
             }
     }
+
+    private fun addHeartsToUser(userId: String, heartsToAdd: Int) {
+        val userRef = firestore.collection("users").document(userId)
+
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(userRef)
+            val currentHearts = snapshot.getLong("hearts") ?: 0
+            val newHearts = currentHearts + heartsToAdd
+            transaction.update(userRef, "hearts", newHearts)
+        }.addOnSuccessListener {
+            Toast.makeText(this, "100 hearts added to your account!", Toast.LENGTH_SHORT).show()
+            // Navigate back to the main menu
+            val intent = Intent(this@DetailActivity, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }.addOnFailureListener { exception ->
+            Log.e("DetailActivity", "Error adding hearts: ${exception.message}")
+            Toast.makeText(this, "Error adding hearts. Please try again.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun openPomodoroTimer(noteTitle: String) {
+        val intent = Intent(this, PomodoroTimerActivity::class.java).apply {
+            putExtra("NOTE_TITLE", noteTitle)
+        }
+        startActivity(intent)
+    }
 }
+
+
