@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -124,6 +125,7 @@ class PomodoroTimerFragment : Fragment() {
         firestore.collection("users")
             .document(userId)
             .collection("notes")
+            .whereEqualTo("isCompleted", false)
             .get()
             .addOnSuccessListener { result ->
                 val titles = result.map { it.getString("title") ?: "No Title" }
@@ -253,20 +255,78 @@ class PomodoroTimerFragment : Fragment() {
             .update("totalTime", formattedTotalTime)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Total time updated", Toast.LENGTH_SHORT).show()
-                markNoteAsCompleted(noteId, activityButton.text.toString()) // Pass noteId and title
+                markNoteAsCompleted() // Pass noteId and title
             }
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Error updating total time", Toast.LENGTH_SHORT).show()
             }
     }
 
-    private fun markNoteAsCompleted(noteId: String, noteTitle: String) {
-        val intent = Intent(requireContext(), DetailActivity::class.java).apply {
-            putExtra("NOTE_ID", noteId)
-            putExtra("taskTitle", noteTitle) // Pass the note title
+    private fun markNoteAsCompleted() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            Log.e("PomodoroTimerFragment", "User is not logged in.")
+            return
         }
-        startActivity(intent)
+        val selectedTitle = activityButton.text.toString()
+
+        if (selectedTitle == "No Title") {
+            Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .collection("notes")
+            .whereEqualTo("title", selectedTitle)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result != null && !result.isEmpty) {
+                    val document = result.documents[0]
+                    document.reference.update("isCompleted", true)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(), "Task marked as completed!", Toast.LENGTH_SHORT).show()
+                            addHeartsToUser(userId, 100)
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("PomodoroTimerFragment", "Error marking task as completed: ${exception.message}")
+                            Toast.makeText(requireContext(), "Error marking task as completed. Please try again.", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Log.e("PomodoroTimerFragment", "No matching document found.")
+                    Toast.makeText(requireContext(), "Error: No matching document found.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PomodoroTimerFragment", "Error fetching document: ${exception.message}")
+                Toast.makeText(requireContext(), "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
+            }
     }
+
+    private fun addHeartsToUser(userId: String, heartsToAdd: Int) {
+        val userRef = firestore.collection("users").document(userId)
+
+        firestore.runTransaction { transaction ->
+            val snapshot = transaction.get(userRef)
+            val currentHearts = snapshot.getLong("hearts") ?: 0
+            val newHearts = currentHearts + heartsToAdd
+            transaction.update(userRef, "hearts", newHearts)
+        }.addOnSuccessListener {
+            Toast.makeText(requireContext(), "100 hearts added to your account!", Toast.LENGTH_SHORT).show()
+            // Navigate back to the main menu
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            activity?.finish()
+        }.addOnFailureListener { exception ->
+            Log.e("PomodoroTimerFragment", "Error adding hearts: ${exception.message}")
+            Toast.makeText(requireContext(), "Error adding hearts. Please try again.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
 
     private fun handleTimerFinish() {
         if (timeLeftInMillis == START_TIME_IN_MILLIS) {
