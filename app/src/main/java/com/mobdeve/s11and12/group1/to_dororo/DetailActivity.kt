@@ -28,6 +28,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var noteEditText: EditText
     private lateinit var saveButton: Button
     private lateinit var deleteButton: ImageButton
+    private lateinit var heartCountTextView: TextView // Added TextView for heart count
 
     private var currentTaskTitle: String? = null
     private var viewOnly: Boolean = false
@@ -45,6 +46,7 @@ class DetailActivity : AppCompatActivity() {
         noteEditText = findViewById(R.id.note_edit_text)
         saveButton = findViewById(R.id.save_button)
         deleteButton = findViewById(R.id.delete_button)
+        heartCountTextView = findViewById(R.id.heart_count) // Initialize TextView for heart count
 
         currentTaskTitle = intent.getStringExtra("taskTitle")
         viewOnly = intent.getBooleanExtra("viewOnly", false)
@@ -59,11 +61,19 @@ class DetailActivity : AppCompatActivity() {
             Log.e("DetailActivity", "Task title is null")
         }
 
+        findViewById<TextView>(R.id.set_timer_text).setOnClickListener {
+            currentTaskTitle?.let { title ->
+                openPomodoroTimer(title)
+            } ?: Log.e("DetailActivity", "Current task title is null")
+        }
+
         dateTextView.setOnClickListener { showDatePicker() }
 
         saveButton.setOnClickListener { saveChanges() }
 
         deleteButton.setOnClickListener { showDeleteConfirmationDialog() }
+
+        fetchHeartCount() // Fetch heart count when the activity is created
     }
 
     private fun setViewOnlyMode() {
@@ -239,6 +249,35 @@ class DetailActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.e("DetailActivity", "Error fetching document: ${exception.message}")
                 Toast.makeText(this, "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun openPomodoroTimer(noteTitle: String) {
+        val intent = Intent(this, PomodoroTimerActivity::class.java).apply {
+            putExtra("NOTE_TITLE", noteTitle)
+        }
+        startActivity(intent)
+    }
+
+    private fun fetchHeartCount() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            // Handle case where user is not logged in
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val heartCount = document.getLong("hearts") ?: 0
+                heartCountTextView.text = heartCount.toString()
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure
+                exception.printStackTrace()
             }
     }
 }
