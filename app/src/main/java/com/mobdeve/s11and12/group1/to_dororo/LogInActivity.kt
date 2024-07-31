@@ -22,12 +22,17 @@ class LogInActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        // Check if user is already logged in
+        if (firebaseAuth.currentUser != null) {
+            navigateToMainActivity()
+        }
+
         loginButton = findViewById(R.id.login_button)
         createAccount = findViewById(R.id.create_account)
         emailEditText = findViewById(R.id.username)
         passwordEditText = findViewById(R.id.password)
-
-        firebaseAuth = FirebaseAuth.getInstance()
 
         loginButton.setOnClickListener {
             val email = emailEditText.text.toString().trim()
@@ -41,7 +46,6 @@ class LogInActivity : AppCompatActivity() {
         }
 
         createAccount.setOnClickListener {
-            // Redirect to CreateAccountActivity
             val intent = Intent(this, CreateAccountActivity::class.java)
             startActivity(intent)
         }
@@ -52,14 +56,16 @@ class LogInActivity : AppCompatActivity() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    navigateToMainActivity()
                 } else {
                     Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 }
-
-

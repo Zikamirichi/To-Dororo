@@ -73,7 +73,6 @@
                         android:fontFamily="@font/archivo"
                         android:textAlignment="viewEnd"
                         android:paddingRight="10dp"
-                        android:text="100"
                         android:textColor="@android:color/white"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -164,20 +163,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/content_container" />
 
-    <ImageButton
-        android:id="@+id/exit_button"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginEnd="12dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="Start Icon"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="@+id/activity_button"
-        app:layout_constraintEnd_toEndOf="@+id/activity_button"
-        app:layout_constraintTop_toTopOf="@+id/activity_button"
-        app:layout_constraintVertical_bias="0.533"
-        app:srcCompat="@drawable/delete" />
-
     <Button
         android:id="@+id/long_button"
         android:layout_width="155dp"
@@ -220,8 +205,9 @@
         android:layout_height="60dp"
         android:layout_marginStart="52dp"
         android:layout_marginTop="73dp"
-        android:backgroundTint="#FFFFFF"
+        android:background="@android:color/transparent"
         android:contentDescription="Start Icon"
+        android:padding="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toStartOf="@+id/restart_button"
         app:layout_constraintStart_toStartOf="parent"
@@ -234,8 +220,9 @@
         android:layout_height="60dp"
         android:layout_marginTop="73dp"
         android:layout_marginEnd="39dp"
-        android:backgroundTint="#FFFFFF"
+        android:background="@android:color/transparent"
         android:contentDescription="Restart Icon"
+        android:padding="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toStartOf="@+id/mark_done_button"
         app:layout_constraintStart_toEndOf="@+id/start_button"

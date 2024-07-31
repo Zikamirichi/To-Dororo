@@ -23,6 +23,7 @@ class UserProfileFragment : Fragment() {
     private lateinit var logoutButton: Button
     private lateinit var editProfileButton: TextView
     private lateinit var welcomeTextView: TextView
+    private lateinit var heartCountTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +41,9 @@ class UserProfileFragment : Fragment() {
         logoutButton = view.findViewById(R.id.logout_button)
         editProfileButton = view.findViewById(R.id.edit_profile)
         welcomeTextView = view.findViewById(R.id.welcome)
+        heartCountTextView = view.findViewById(R.id.heart_count)
 
+        fetchHeartCount()
         loadUserProfile()
 
         editProfileButton.setOnClickListener {
@@ -81,6 +84,25 @@ class UserProfileFragment : Fragment() {
             }.addOnFailureListener { exception ->
                 exception.printStackTrace()
             }
+        }
+    }
+
+    private fun fetchHeartCount() {
+        val user: FirebaseUser? = auth.currentUser
+        user?.let {
+            val userId = it.uid
+
+            db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val heartCount = document.getLong("hearts") ?: 0
+                    heartCountTextView.text = heartCount.toString()
+                }
+                .addOnFailureListener { exception ->
+                    // Handle failure
+                    exception.printStackTrace()
+                }
         }
     }
 }

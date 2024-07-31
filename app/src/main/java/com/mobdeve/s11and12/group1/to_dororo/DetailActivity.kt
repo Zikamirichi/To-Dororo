@@ -73,7 +73,7 @@ class DetailActivity : AppCompatActivity() {
 
         deleteButton.setOnClickListener { showDeleteConfirmationDialog() }
 
-        fetchHeartCount() // Fetch heart count when the activity is created
+        fetchHeartCount()
     }
 
     private fun setViewOnlyMode() {

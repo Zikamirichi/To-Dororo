@@ -31,6 +31,7 @@ class PomodoroTimerFragment : Fragment() {
     private lateinit var longButton: Button
     private lateinit var pomodoroButton: Button
     private lateinit var activityButton: Button
+    private lateinit var heartCountTextView: TextView
 
     private var countDownTimer: CountDownTimer? = null
     private var isTimerRunning: Boolean = false
@@ -38,6 +39,10 @@ class PomodoroTimerFragment : Fragment() {
     private var pomodoroCount: Int = 0
     private var noteId: String? = null
     private var noteTitle: String? = null
+
+    private var isShortButtonPressed: Boolean = false
+    private var isLongButtonPressed: Boolean = false
+    private var isPomodoroButtonPressed: Boolean = false
 
     companion object {
         const val START_TIME_IN_MILLIS: Long = 1500000 // 25 minutes
@@ -63,6 +68,7 @@ class PomodoroTimerFragment : Fragment() {
         longButton = view.findViewById(R.id.long_button)
         pomodoroButton = view.findViewById(R.id.pomodoro_button)
         activityButton = view.findViewById(R.id.activity_button)
+        heartCountTextView = view.findViewById(R.id.heart_count)
 
         noteId = arguments?.getString("NOTE_ID")
         noteTitle = arguments?.getString("NOTE_TITLE")
@@ -77,10 +83,26 @@ class PomodoroTimerFragment : Fragment() {
         startButton.setOnClickListener { startPauseTimer() }
         restartButton.setOnClickListener { resetTimer() }
         markDoneButton.setOnClickListener { checkAndMarkAsDone() }
-        shortButton.setOnClickListener { startShortBreak() }
-        longButton.setOnClickListener { startLongBreak() }
-        pomodoroButton.setOnClickListener { startPomodoro() }
+        shortButton.setOnClickListener {
+            isShortButtonPressed = true
+            isLongButtonPressed = false
+            isPomodoroButtonPressed = false
+            startShortBreak()
+        }
+        longButton.setOnClickListener {
+            isShortButtonPressed = false
+            isLongButtonPressed = true
+            isPomodoroButtonPressed = false
+            startLongBreak()
+        }
+        pomodoroButton.setOnClickListener {
+            isShortButtonPressed = false
+            isLongButtonPressed = false
+            isPomodoroButtonPressed = true
+            startPomodoro()
+        }
 
+        fetchHeartCount()
         updateCountDownText()
 
         // For History Button
@@ -238,8 +260,17 @@ class PomodoroTimerFragment : Fragment() {
 
     private fun updateNoteWithTotalTime(noteId: String, currentTotalTimeMillis: Long) {
         val userId = firebaseAuth.currentUser?.uid ?: return
-        val pomodoroDurationMillis = START_TIME_IN_MILLIS - timeLeftInMillis
-        val newTotalTimeMillis =  pomodoroDurationMillis
+
+        val newTotalTimeMillis: Long
+
+        // Check which button was pressed and set newTotalTimeMillis accordingly
+        newTotalTimeMillis = when {
+            isPomodoroButtonPressed -> START_TIME_IN_MILLIS - timeLeftInMillis
+            isShortButtonPressed -> SHORT_BREAK_TIME_IN_MILLIS - timeLeftInMillis
+            isLongButtonPressed -> LONG_BREAK_TIME_IN_MILLIS - timeLeftInMillis
+            else -> 0 // Default case if no button was pressed
+        }
+
 
         // Convert milliseconds to minutes and seconds
         val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(newTotalTimeMillis)
@@ -261,6 +292,7 @@ class PomodoroTimerFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error updating total time", Toast.LENGTH_SHORT).show()
             }
     }
+
 
     private fun markNoteAsCompleted() {
         val currentUser = firebaseAuth.currentUser
@@ -347,6 +379,27 @@ class PomodoroTimerFragment : Fragment() {
 
         val timeFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
         timerTextView.text = timeFormatted
+    }
+
+    private fun fetchHeartCount() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            return
+        }
+
+        val userId = currentUser.uid
+
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                val heartCount = document.getLong("hearts") ?: 0
+                heartCountTextView.text = heartCount.toString()
+            }
+            .addOnFailureListener { exception ->
+                // Handle failure
+                exception.printStackTrace()
+            }
     }
 }
 

@@ -3,6 +3,7 @@ package com.mobdeve.s11and12.group1.to_dororo
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -15,6 +16,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var editUsername: EditText
     private lateinit var editName: EditText
     private lateinit var saveProfileButton: Button
+    private lateinit var heartCountTextView: TextView
+    private lateinit var cancel: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +28,21 @@ class EditProfileActivity : AppCompatActivity() {
 
         editUsername = findViewById(R.id.edit_username)
         editName = findViewById(R.id.edit_name)
+        cancel = findViewById(R.id.cancel_edit_profile)
         saveProfileButton = findViewById(R.id.save_profile_button)
+        heartCountTextView = findViewById(R.id.heart_count)
+
+        fetchHeartCount()
 
         saveProfileButton.setOnClickListener {
             saveUserProfile()
         }
 
         loadUserProfile()
+
+        cancel.setOnClickListener {
+            finish()
+        }
     }
 
     private fun loadUserProfile() {
@@ -69,6 +80,24 @@ class EditProfileActivity : AppCompatActivity() {
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Profile Update Failed", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
+    private fun fetchHeartCount() {
+        val user: FirebaseUser? = auth.currentUser
+        user?.let {
+            val userId = it.uid
+
+            db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val heartCount = document.getLong("hearts") ?: 0
+                    heartCountTextView.text = heartCount.toString()
+                }
+                .addOnFailureListener { exception ->
+                    // Handle failure
+                    exception.printStackTrace()
                 }
         }
     }
