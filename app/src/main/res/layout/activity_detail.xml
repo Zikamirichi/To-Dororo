@@ -266,6 +266,8 @@
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:background="@drawable/button_background"
+        android:minWidth="200dp"
+        android:minHeight="48dp"
         android:paddingStart="32dp"
         android:paddingEnd="32dp"
         android:paddingTop="12dp"
@@ -273,5 +275,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
