@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -62,7 +63,7 @@ class DetailActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener { saveChanges() }
 
-        deleteButton.setOnClickListener { markNoteAsCompleted() }
+        deleteButton.setOnClickListener { showDeleteConfirmationDialog() }
     }
 
     private fun setViewOnlyMode() {
@@ -180,7 +181,30 @@ class DetailActivity : AppCompatActivity() {
             }
     }
 
-    private fun markNoteAsCompleted() {
+    private fun showDeleteConfirmationDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.modal_confirm_delete, null)
+        val builder = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+
+        val alertDialog = builder.create()
+
+        val buttonYes: Button = dialogView.findViewById(R.id.button_yes)
+        val buttonCancel: Button = dialogView.findViewById(R.id.button_cancel)
+
+        buttonYes.setOnClickListener {
+            deleteNote()
+            alertDialog.dismiss()
+        }
+
+        buttonCancel.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        alertDialog.show()
+    }
+
+    private fun deleteNote() {
         val currentUser = firebaseAuth.currentUser
         if (currentUser == null) {
             Log.e("DetailActivity", "User is not logged in.")
@@ -197,18 +221,15 @@ class DetailActivity : AppCompatActivity() {
             .addOnSuccessListener { result ->
                 if (result != null && !result.isEmpty) {
                     val document = result.documents[0]
-                    document.reference.update("isCompleted", true)
+                    document.reference.delete()
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Task marked as completed!", Toast.LENGTH_SHORT).show()
-                            // Navigate back to the main menu
-                            val intent = Intent(this@DetailActivity, MainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            startActivity(intent)
+                            Toast.makeText(this, "Note deleted successfully!", Toast.LENGTH_SHORT).show()
+                            setResult(RESULT_OK)
                             finish()
                         }
                         .addOnFailureListener { exception ->
-                            Log.e("DetailActivity", "Error marking task as completed: ${exception.message}")
-                            Toast.makeText(this, "Error marking task as completed. Please try again.", Toast.LENGTH_SHORT).show()
+                            Log.e("DetailActivity", "Error deleting document: ${exception.message}")
+                            Toast.makeText(this, "Error deleting note. Please try again.", Toast.LENGTH_SHORT).show()
                         }
                 } else {
                     Log.e("DetailActivity", "No matching document found.")
