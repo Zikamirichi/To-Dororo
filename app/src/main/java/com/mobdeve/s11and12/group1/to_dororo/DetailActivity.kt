@@ -88,7 +88,7 @@ class DetailActivity : AppCompatActivity() {
 
         setTimerButton = findViewById(R.id.set_timer_text)
         setTimerButton.isEnabled = false
-        setTimerButton.backgroundTintList = ColorStateList.valueOf(Color.GRAY)
+        setTimerButton.backgroundTintList = ColorStateList.valueOf(Color.LTGRAY)
 
     }
 

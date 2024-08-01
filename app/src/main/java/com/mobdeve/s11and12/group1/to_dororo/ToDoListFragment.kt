@@ -20,6 +20,7 @@ class ToDoListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: TodoAdapter
     private lateinit var heartCountTextView: TextView
+    private lateinit var placeholderTextView: TextView
     private val firestore = FirebaseFirestore.getInstance()
     private val firebaseAuth = FirebaseAuth.getInstance()
 
@@ -33,6 +34,7 @@ class ToDoListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         heartCountTextView = view.findViewById(R.id.heart_count)
+        placeholderTextView = view.findViewById(R.id.placeholder_text)
 
         fetchTodoItems()
         fetchHeartCount()
@@ -110,6 +112,12 @@ class ToDoListFragment : Fragment() {
                 for (date in sortedDates) {
                     sortedItems.add(TodoItem(date, date, true)) // Date Header
                     sortedItems.addAll(dateMap[date] ?: emptyList())
+                }
+
+                if (sortedItems.isEmpty()) {
+                    placeholderTextView.visibility = View.VISIBLE
+                } else {
+                    placeholderTextView.visibility = View.GONE
                 }
 
                 adapter = TodoAdapter(sortedItems)

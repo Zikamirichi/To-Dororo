@@ -7,6 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".ToDoListFragment">
 
+    <!-- Placeholder TextView -->
+    <TextView
+        android:id="@+id/placeholder_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Press the + button on the bottom right to create a note"
+        android:textColor="#737373"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:maxLines="2"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <!-- Container for main content -->
     <LinearLayout
         android:id="@+id/content_container"
