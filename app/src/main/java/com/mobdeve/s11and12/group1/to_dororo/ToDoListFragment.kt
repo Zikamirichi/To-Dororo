@@ -89,6 +89,7 @@ class ToDoListFragment : Fragment() {
                         null
                     }
                     val formattedDate = date?.let { SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(it) } ?: dateString
+                    val headerDate = date?.let { SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(it) } ?: dateString
                     val isCompleted = document.getBoolean("isCompleted") ?: false
 
                     // Check if the date is before today
@@ -101,17 +102,26 @@ class ToDoListFragment : Fragment() {
                             .update("isCompleted", true)
                     } else {
                         val todoItem = TodoItem(title, formattedDate, isCompleted = isCompleted)
-                        dateMap.getOrPut(formattedDate) { mutableListOf() }.add(todoItem)
+                        dateMap.getOrPut(headerDate) { mutableListOf() }.add(todoItem)
                     }
                 }
 
-                // Sort dates and create list
-                val sortedDates = dateMap.keys.sorted()
-                val sortedItems = mutableListOf<TodoItem>()
+                // Sort dates and create a list with sorted tasks
+                val sortedDates = dateMap.keys
+                    .mapNotNull { dateStr ->
+                        try {
+                            SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).parse(dateStr)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                    .sorted()
+                    .map { date ->
+                        SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(date)
+                    }
 
-                for (date in sortedDates) {
-                    sortedItems.add(TodoItem(date, date, true)) // Date Header
-                    sortedItems.addAll(dateMap[date] ?: emptyList())
+                val sortedItems = sortedDates.flatMap { date ->
+                    listOf(TodoItem(date, date, isDateHeader = true)) + (dateMap[date]?.sortedBy { it.title } ?: emptyList())
                 }
 
                 if (sortedItems.isEmpty()) {
@@ -128,6 +138,8 @@ class ToDoListFragment : Fragment() {
                 exception.printStackTrace()
             }
     }
+
+
 
     private fun fetchHeartCount() {
         val currentUser = firebaseAuth.currentUser

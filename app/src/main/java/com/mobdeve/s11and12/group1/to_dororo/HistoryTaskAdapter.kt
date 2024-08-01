@@ -49,7 +49,6 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
         }
     }
 
-    // HistoryTaskAdapter.kt
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val activityButton: Button = itemView.findViewById(R.id.activity_button)
 
@@ -65,7 +64,6 @@ class HistoryTaskAdapter(private val context: Context, private val taskList: Mut
             }
         }
     }
-
 
     fun clearTasks() {
         taskList.clear()

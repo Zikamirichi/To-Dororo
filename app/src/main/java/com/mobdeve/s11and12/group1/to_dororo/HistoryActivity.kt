@@ -27,7 +27,6 @@ class HistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-
         recyclerView = findViewById(R.id.recycler_view)
         heartCountTextView = findViewById(R.id.heart_count)
         val clearButton: Button = findViewById(R.id.clear_button)
@@ -60,12 +59,13 @@ class HistoryActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 val dateMap = mutableMapOf<String, MutableList<HistoryTask>>()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
                 for (document in result) {
                     val title = document.getString("title") ?: ""
                     val dateString = document.getString("date") ?: ""
                     val date = try {
-                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(dateString)
+                        dateFormat.parse(dateString)
                     } catch (e: Exception) {
                         null
                     }
@@ -75,8 +75,10 @@ class HistoryActivity : AppCompatActivity() {
                     dateMap.getOrPut(formattedDate) { mutableListOf() }.add(historyTask)
                 }
 
-                // Sort dates and create list
-                val sortedDates = dateMap.keys.sorted()
+                // Sort dates correctly and create list
+                val sortedDates = dateMap.keys.sortedBy {
+                    SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).parse(it)
+                }
                 val sortedTasks = mutableListOf<HistoryTask>()
 
                 for (date in sortedDates) {
