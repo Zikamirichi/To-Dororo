@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CreateAccountActivity : AppCompatActivity() {
 
@@ -100,6 +102,9 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun createDefaultSubcollections(userId: String) {
+        val date = Date()
+        val dateFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+        val formattedDate = dateFormat.format(date)
 
         val historyMap = hashMapOf(
             "body" to "",
@@ -110,7 +115,7 @@ class CreateAccountActivity : AppCompatActivity() {
 
         val notesMap = hashMapOf(
             "body" to "",
-            "date" to "",
+            "date" to formattedDate,
             "isCompleted" to false,
             "title" to "To Do Title",
             "totalTime" to "Total: N/A"
@@ -178,5 +183,3 @@ class CreateAccountActivity : AppCompatActivity() {
         }
     }
 }
-
-

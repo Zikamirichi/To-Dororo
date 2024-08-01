@@ -183,24 +183,25 @@
             android:layout_marginEnd="16dp">
 
             <!-- Set timer section -->
+
+            <!-- Spacer view -->
             <Button
                 android:id="@+id/set_timer_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set timer"
-                android:textSize="14sp"
-                android:textColor="@android:color/black"
-                android:fontFamily="sans-serif-medium"
                 android:layout_gravity="center_vertical"
-                android:paddingBottom="4dp"
+                android:layout_marginEnd="16dp"
                 android:backgroundTint="#FFFFFF"
+                android:fontFamily="sans-serif-medium"
+                android:paddingBottom="4dp"
+                android:text="Set timer"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:focusable="true"
                 app:cornerRadius="10dp"
                 app:strokeColor="#000000"
-                app:strokeWidth="1dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                app:strokeWidth="1dp" />
 
-            <!-- Spacer view -->
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -277,8 +278,6 @@
         android:textColor="@android:color/white"
         android:backgroundTint="#00BE63"
         app:cornerRadius="10dp"
-        app:strokeColor="#000000"
-        app:strokeWidth="1dp"
         android:minWidth="200dp"
         android:minHeight="48dp"
         android:paddingStart="32dp"

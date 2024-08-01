@@ -1,5 +1,7 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,10 +21,12 @@ class HistoryActivity : AppCompatActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private val firebaseAuth = FirebaseAuth.getInstance()
     private lateinit var heartCountTextView: TextView
+    private lateinit var setTimerButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
+
 
         recyclerView = findViewById(R.id.recycler_view)
         heartCountTextView = findViewById(R.id.heart_count)
