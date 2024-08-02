@@ -272,10 +272,46 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun openPomodoroTimer(noteTitle: String) {
-        val intent = Intent(this, PomodoroTimerActivity::class.java).apply {
-            putExtra("NOTE_TITLE", noteTitle)
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser == null) {
+            Log.e("DetailActivity", "User is not logged in.")
+            return
         }
-        startActivity(intent)
+
+        val userId = currentUser.uid
+
+        // Update the note's isSelectedForPomodoro field
+        firestore.collection("users")
+            .document(userId)
+            .collection("notes")
+            .whereEqualTo("title", noteTitle)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result != null && !result.isEmpty) {
+                    val document = result.documents[0]
+                    document.reference.update("isSelectedForPomodoro", true)
+                        .addOnSuccessListener {
+                            Log.d("DetailActivity", "Note updated for Pomodoro successfully.")
+                            // Proceed to open the Pomodoro Timer
+                            val intent = Intent(this, MainActivity::class.java).apply {
+                                putExtra("showPomodoroFragment", true)
+                            }
+                            startActivity(intent)
+                            finish()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("DetailActivity", "Error updating note for Pomodoro: ${exception.message}")
+                            Toast.makeText(this, "Error updating note. Please try again.", Toast.LENGTH_SHORT).show()
+                        }
+                } else {
+                    Log.e("DetailActivity", "No matching document found.")
+                    Toast.makeText(this, "Error: No matching document found.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("DetailActivity", "Error fetching document: ${exception.message}")
+                Toast.makeText(this, "Error fetching document. Please try again.", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun fetchHeartCount() {

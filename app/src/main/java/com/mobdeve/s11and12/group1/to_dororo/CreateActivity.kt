@@ -176,13 +176,14 @@ class CreateActivity : AppCompatActivity() {
         val date = dateTextView.text.toString().replace("Date: ", "")
         val totalTime = totalTextView.text.toString().replace("Total: ", "")
         val isCompleted = false
-
+        val isSelectedForPomodoro = false
         val note = hashMapOf(
             "title" to title,
             "body" to body,
             "date" to date,
             "totalTime" to totalTime,
-            "isCompleted" to isCompleted
+            "isCompleted" to isCompleted,
+            "isSelectedForPomodoro" to isSelectedForPomodoro
         )
 
         val currentUser = auth.currentUser

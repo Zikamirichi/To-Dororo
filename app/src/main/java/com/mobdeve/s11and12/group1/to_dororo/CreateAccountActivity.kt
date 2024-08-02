@@ -118,7 +118,8 @@ class CreateAccountActivity : AppCompatActivity() {
             "date" to formattedDate,
             "isCompleted" to false,
             "title" to "To Do Title",
-            "totalTime" to "Total: N/A"
+            "totalTime" to "Total: N/A",
+            "isSelectedForPomodoro" to false
         )
 
 //        val petsMap = hashMapOf(

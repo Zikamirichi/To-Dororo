@@ -73,6 +73,7 @@ class PomodoroTimerFragment : Fragment() {
         noteId = arguments?.getString("NOTE_ID")
         noteTitle = arguments?.getString("NOTE_TITLE")
 
+        fetchNoteTitle()
         if (noteId != null) {
             fetchNoteTitle()
         } else if (noteTitle != null) {
@@ -80,27 +81,58 @@ class PomodoroTimerFragment : Fragment() {
         }
         activityButton.setOnClickListener { showTaskSelectionDialog() }
 
-        startButton.setOnClickListener { startPauseTimer() }
-        restartButton.setOnClickListener { resetTimer() }
-        markDoneButton.setOnClickListener { checkAndMarkAsDone() }
-        shortButton.setOnClickListener {
-            isShortButtonPressed = true
-            isLongButtonPressed = false
-            isPomodoroButtonPressed = false
-            startShortBreak()
-        }
-        longButton.setOnClickListener {
-            isShortButtonPressed = false
-            isLongButtonPressed = true
-            isPomodoroButtonPressed = false
-            startLongBreak()
-        }
-        pomodoroButton.setOnClickListener {
-            isShortButtonPressed = false
-            isLongButtonPressed = false
-            isPomodoroButtonPressed = true
-            startPomodoro()
-        }
+            startButton.setOnClickListener {
+                val selectedTitle = activityButton.text.toString()
+                if (selectedTitle == "Select Task") {
+                    Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (selectedTitle != "Select Task"){
+                    startPauseTimer()
+                }
+            }
+            restartButton.setOnClickListener {
+                val selectedTitle = activityButton.text.toString()
+                if (selectedTitle == "Select Task") {
+                Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (selectedTitle != "Select Task") {
+                resetTimer()
+                }
+            }
+
+
+            markDoneButton.setOnClickListener { checkAndMarkAsDone() }
+            shortButton.setOnClickListener {
+                val selectedTitle = activityButton.text.toString()
+                if (selectedTitle == "Select Task") {
+                    Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (selectedTitle != "Select Task") {
+                    isShortButtonPressed = true
+                    isLongButtonPressed = false
+                    isPomodoroButtonPressed = false
+                    startShortBreak()
+                }
+            }
+            longButton.setOnClickListener {
+                val selectedTitle = activityButton.text.toString()
+                if (selectedTitle == "Select Task") {
+                    Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (selectedTitle != "Select Task") {
+                    isShortButtonPressed = false
+                    isLongButtonPressed = true
+                    isPomodoroButtonPressed = false
+                    startLongBreak()
+                }
+            }
+            pomodoroButton.setOnClickListener {
+                val selectedTitle = activityButton.text.toString()
+                if (selectedTitle == "Select Task") {
+                    Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (selectedTitle != "Select Task") {
+                    isShortButtonPressed = false
+                    isLongButtonPressed = false
+                    isPomodoroButtonPressed = true
+                    startPomodoro()
+                }
+            }
 
         fetchHeartCount()
         updateCountDownText()
@@ -121,24 +153,37 @@ class PomodoroTimerFragment : Fragment() {
 
     private fun fetchNoteTitle() {
         val userId = firebaseAuth.currentUser?.uid ?: return
-        noteId?.let { id ->
-            firestore.collection("users")
-                .document(userId)
-                .collection("notes")
-                .document(id)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document != null) {
-                        val title = document.getString("title") ?: "No Title"
+
+        firestore.collection("users")
+            .document(userId)
+            .collection("notes")
+            .whereEqualTo("isSelectedForPomodoro", true)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (!querySnapshot.isEmpty) {
+                    val document = querySnapshot.documents.firstOrNull()
+                    document?.let {
+                        val title = it.getString("title") ?: "No Title"
                         activityButton.text = title
-                    } else {
-                        activityButton.text = "No Title"
+
+                        // Reset the isSelectedForPomodoro field to false
+                        it.reference.update("isSelectedForPomodoro", false)
+                            .addOnSuccessListener {
+                                Log.d("PomodoroTimerFragment", "isSelectedForPomodoro reset successfully.")
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("PomodoroTimerFragment", "Error resetting isSelectedForPomodoro: ${e.message}")
+                            }
+                    } ?: run {
+                        activityButton.text = "Select Task"
                     }
+                } else {
+                    activityButton.text = "Select Task"
                 }
-                .addOnFailureListener { e ->
-                    activityButton.text = "Error fetching title"
-                }
-        }
+            }
+            .addOnFailureListener { e ->
+                activityButton.text = "Error fetching title"
+            }
     }
 
     private fun showTaskSelectionDialog() {
@@ -161,7 +206,7 @@ class PomodoroTimerFragment : Fragment() {
                 builder.show()
             }
             .addOnFailureListener { e ->
-                // Handle failure, maybe show a toast or log the error
+                Toast.makeText(requireContext(), "Error fetching Title", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -230,7 +275,7 @@ class PomodoroTimerFragment : Fragment() {
         val userId = firebaseAuth.currentUser?.uid ?: return
         val selectedTitle = activityButton.text.toString()
 
-        if (selectedTitle == "No Title") {
+        if (selectedTitle == "Select Task") {
             Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
             return
         }

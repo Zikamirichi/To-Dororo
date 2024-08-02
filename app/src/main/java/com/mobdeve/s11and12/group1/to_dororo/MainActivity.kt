@@ -44,12 +44,17 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        replaceFragment(ToDoListFragment())
-
+        if (intent.getBooleanExtra("showPomodoroFragment", false)) {
+            bottomNavigationView.selectedItemId = R.id.pomodoro
+        } else {
+            replaceFragment(ToDoListFragment())
+        }
     }
 
-    private fun replaceFragment(fragment: Fragment){
-        supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment).commit()
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.frame_layout, fragment)
+            .commit()
     }
 
 }
