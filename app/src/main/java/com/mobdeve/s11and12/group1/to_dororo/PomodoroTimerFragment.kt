@@ -37,12 +37,22 @@ class PomodoroTimerFragment : Fragment() {
     private var isTimerRunning: Boolean = false
     private var timeLeftInMillis: Long = START_TIME_IN_MILLIS
     private var pomodoroCount: Int = 0
+    private var shortCount: Int = 0
+    private var longCount: Int = 0
     private var noteId: String? = null
     private var noteTitle: String? = null
 
     private var isShortButtonPressed: Boolean = false
     private var isLongButtonPressed: Boolean = false
     private var isPomodoroButtonPressed: Boolean = false
+
+    private enum class TimerState {
+        POMODORO,
+        SHORT_BREAK,
+        LONG_BREAK
+    }
+
+    private var currentState: TimerState = TimerState.POMODORO
 
     companion object {
         const val START_TIME_IN_MILLIS: Long = 1500000 // 25 minutes
@@ -94,7 +104,8 @@ class PomodoroTimerFragment : Fragment() {
                 if (selectedTitle == "Select Task") {
                 Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
                 } else if (selectedTitle != "Select Task") {
-                resetTimer()
+                    resetCounts()
+                    resetTimer()
                 }
             }
 
@@ -108,6 +119,7 @@ class PomodoroTimerFragment : Fragment() {
                     isShortButtonPressed = true
                     isLongButtonPressed = false
                     isPomodoroButtonPressed = false
+                    resetCounts()
                     startShortBreak()
                 }
             }
@@ -119,6 +131,7 @@ class PomodoroTimerFragment : Fragment() {
                     isShortButtonPressed = false
                     isLongButtonPressed = true
                     isPomodoroButtonPressed = false
+                    resetCounts()
                     startLongBreak()
                 }
             }
@@ -130,6 +143,7 @@ class PomodoroTimerFragment : Fragment() {
                     isShortButtonPressed = false
                     isLongButtonPressed = false
                     isPomodoroButtonPressed = true
+                    resetCounts()
                     startPomodoro()
                 }
             }
@@ -137,7 +151,6 @@ class PomodoroTimerFragment : Fragment() {
         fetchHeartCount()
         updateCountDownText()
 
-        // For History Button
         val historyButton = view.findViewById<ImageButton>(R.id.history_icon)
         historyButton.setOnClickListener {
             startActivity(Intent(requireContext(), HistoryActivity::class.java))
@@ -254,6 +267,8 @@ class PomodoroTimerFragment : Fragment() {
         resetTimer()
         timeLeftInMillis = START_TIME_IN_MILLIS
         updateCountDownText()
+        currentState = TimerState.POMODORO
+        pomodoroCount++
         startTimer()
     }
 
@@ -261,6 +276,8 @@ class PomodoroTimerFragment : Fragment() {
         resetTimer()
         timeLeftInMillis = SHORT_BREAK_TIME_IN_MILLIS
         updateCountDownText()
+        currentState = TimerState.SHORT_BREAK
+        shortCount++
         startTimer()
     }
 
@@ -268,6 +285,8 @@ class PomodoroTimerFragment : Fragment() {
         resetTimer()
         timeLeftInMillis = LONG_BREAK_TIME_IN_MILLIS
         updateCountDownText()
+        currentState = TimerState.LONG_BREAK
+        longCount++
         startTimer()
     }
 
@@ -306,16 +325,20 @@ class PomodoroTimerFragment : Fragment() {
     private fun updateNoteWithTotalTime(noteId: String, currentTotalTimeMillis: Long) {
         val userId = firebaseAuth.currentUser?.uid ?: return
 
-        val newTotalTimeMillis: Long
+        val additionalTimeMillis: Long
+        val additionalPomodoroMillis = pomodoroCount * START_TIME_IN_MILLIS
+        val additionalShortBreakMillis = shortCount * SHORT_BREAK_TIME_IN_MILLIS
+        val additionalLongBreakMillis = longCount * LONG_BREAK_TIME_IN_MILLIS
 
-        // Check which button was pressed and set newTotalTimeMillis accordingly
-        newTotalTimeMillis = when {
-            isPomodoroButtonPressed -> START_TIME_IN_MILLIS - timeLeftInMillis
-            isShortButtonPressed -> SHORT_BREAK_TIME_IN_MILLIS - timeLeftInMillis
-            isLongButtonPressed -> LONG_BREAK_TIME_IN_MILLIS - timeLeftInMillis
-            else -> 0 // Default case if no button was pressed
+        additionalTimeMillis = when {
+            isPomodoroButtonPressed ->  - timeLeftInMillis
+            isShortButtonPressed ->  - timeLeftInMillis
+            isLongButtonPressed ->  - timeLeftInMillis
+            else -> 0
         }
 
+        // Calculate the new total time
+        val newTotalTimeMillis = currentTotalTimeMillis + additionalTimeMillis + additionalPomodoroMillis + additionalShortBreakMillis + additionalLongBreakMillis + 1000
 
         // Convert milliseconds to minutes and seconds
         val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(newTotalTimeMillis)
@@ -406,15 +429,20 @@ class PomodoroTimerFragment : Fragment() {
 
 
     private fun handleTimerFinish() {
-        if (timeLeftInMillis == START_TIME_IN_MILLIS) {
-            pomodoroCount++
-            if (pomodoroCount % POMODOROS_BEFORE_LONG_BREAK == 0) {
-                startLongBreak()
-            } else {
-                startShortBreak()
+        when (currentState) {
+            TimerState.POMODORO -> {
+                if (pomodoroCount % POMODOROS_BEFORE_LONG_BREAK == 0) {
+                    startLongBreak()
+                } else {
+                    startShortBreak()
+                }
             }
-        } else {
-            startPomodoro()
+            TimerState.SHORT_BREAK -> {
+                startPomodoro()
+            }
+            TimerState.LONG_BREAK -> {
+                startPomodoro()
+            }
         }
     }
 
@@ -442,9 +470,14 @@ class PomodoroTimerFragment : Fragment() {
                 heartCountTextView.text = heartCount.toString()
             }
             .addOnFailureListener { exception ->
-                // Handle failure
                 exception.printStackTrace()
             }
+    }
+
+    private fun resetCounts() {
+        pomodoroCount = 0
+        shortCount = 0
+        longCount = 0
     }
 }
 
