@@ -77,6 +77,17 @@ class DetailActivity : AppCompatActivity() {
         deleteButton.setOnClickListener { showDeleteConfirmationDialog() }
 
         fetchHeartCount()
+
+        // Adding helpView and historyButton functionality
+        val helpView = findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+
+        val historyButton = findViewById<ImageButton>(R.id.history_icon)
+        historyButton.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
+        }
     }
 
     private fun setViewOnlyMode() {

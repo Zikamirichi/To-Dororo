@@ -1,12 +1,13 @@
 package com.mobdeve.s11and12.group1.to_dororo
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,6 +44,17 @@ class ChangePassActivity : AppCompatActivity() {
 
         cancel1.setOnClickListener {
             finish()
+        }
+
+        // Adding helpView and historyButton functionality
+        val helpView = findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
+            startActivity(Intent(this, HelpActivity::class.java))
+        }
+
+        val historyButton = findViewById<ImageButton>(R.id.history_icon)
+        historyButton.setOnClickListener {
+            startActivity(Intent(this, HistoryActivity::class.java))
         }
     }
 
@@ -84,4 +96,3 @@ class ChangePassActivity : AppCompatActivity() {
         }
     }
 }
-

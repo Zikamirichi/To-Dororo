@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
@@ -63,6 +64,17 @@ class UserProfileFragment : Fragment() {
             startActivity(intent)
         }
 
+        // Adding helpView and historyButton functionality
+        val helpView = view.findViewById<ImageButton>(R.id.help_icon)
+        helpView.setOnClickListener {
+            startActivity(Intent(activity, HelpActivity::class.java))
+        }
+
+        val historyButton = view.findViewById<ImageButton>(R.id.history_icon)
+        historyButton.setOnClickListener {
+            startActivity(Intent(activity, HistoryActivity::class.java))
+        }
+
         return view
     }
 
@@ -106,7 +118,3 @@ class UserProfileFragment : Fragment() {
         }
     }
 }
-
-
-
-
