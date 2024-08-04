@@ -117,4 +117,10 @@ class UserProfileFragment : Fragment() {
                 }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        loadUserProfile()
+        fetchHeartCount()
+    }
 }

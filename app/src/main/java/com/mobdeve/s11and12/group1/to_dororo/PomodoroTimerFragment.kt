@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Locale
@@ -41,6 +42,7 @@ class PomodoroTimerFragment : Fragment() {
     private var longCount: Int = 0
     private var noteId: String? = null
     private var noteTitle: String? = null
+    private var currentButton: Boolean = false
 
     private var isShortButtonPressed: Boolean = false
     private var isLongButtonPressed: Boolean = false
@@ -106,45 +108,59 @@ class PomodoroTimerFragment : Fragment() {
                 } else if (selectedTitle != "Select Task") {
                     resetCounts()
                     resetTimer()
+                    currentButton = false
                 }
             }
 
 
-            markDoneButton.setOnClickListener { checkAndMarkAsDone() }
+            markDoneButton.setOnClickListener {
+                checkAndMarkAsDone()
+                currentButton = false
+            }
+
             shortButton.setOnClickListener {
                 val selectedTitle = activityButton.text.toString()
                 if (selectedTitle == "Select Task") {
                     Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
-                } else if (selectedTitle != "Select Task") {
+                } else if (currentButton) {
+                    Snackbar.make(requireView(), "You cannot start a short break while Timer is active. Please restart the timer first.", Snackbar.LENGTH_LONG).show()
+                }else if (selectedTitle != "Select Task") {
                     isShortButtonPressed = true
                     isLongButtonPressed = false
                     isPomodoroButtonPressed = false
                     resetCounts()
                     startShortBreak()
+                    currentButton = true
                 }
             }
             longButton.setOnClickListener {
                 val selectedTitle = activityButton.text.toString()
                 if (selectedTitle == "Select Task") {
                     Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (currentButton) {
+                    Snackbar.make(requireView(), "You cannot start a long break while Timer is active. Please restart the timer first.", Snackbar.LENGTH_LONG).show()
                 } else if (selectedTitle != "Select Task") {
                     isShortButtonPressed = false
                     isLongButtonPressed = true
                     isPomodoroButtonPressed = false
                     resetCounts()
                     startLongBreak()
+                    currentButton = true
                 }
             }
             pomodoroButton.setOnClickListener {
                 val selectedTitle = activityButton.text.toString()
                 if (selectedTitle == "Select Task") {
                     Toast.makeText(requireContext(), "Please select a task first", Toast.LENGTH_SHORT).show()
+                } else if (currentButton) {
+                    Snackbar.make(requireView(), "You cannot start a pomodoro while Timer is active. Please restart the timer first.", Snackbar.LENGTH_LONG).show()
                 } else if (selectedTitle != "Select Task") {
                     isShortButtonPressed = false
                     isLongButtonPressed = false
                     isPomodoroButtonPressed = true
                     resetCounts()
                     startPomodoro()
+                    currentButton = true
                 }
             }
 

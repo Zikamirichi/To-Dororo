@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -64,18 +65,29 @@ class ChangePassActivity : AppCompatActivity() {
         val newPass = newPassword.text.toString()
         val confirmPass = confirmPassword.text.toString()
 
-        if (newPass == confirmPass) {
-            user?.updatePassword(newPass)?.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Password Updated", Toast.LENGTH_SHORT).show()
+        if (user != null && newPass == confirmPass) {
+            val credential = EmailAuthProvider.getCredential(user.email!!, oldPass)
+
+            // Re-authenticate the user
+            user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
+                if (reauthTask.isSuccessful) {
+                    // User has been re-authenticated, proceed to update password
+                    user.updatePassword(newPass).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Password Updated", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Password Update Failed", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
-                    Toast.makeText(this, "Password Update Failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Old Password is incorrect", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Passwords do not match or user is null", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun fetchHeartCount() {
         val user: FirebaseUser? = auth.currentUser
