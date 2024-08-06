@@ -102,9 +102,9 @@ class CreateAccountActivity : AppCompatActivity() {
     }
 
     private fun createDefaultSubcollections(userId: String) {
-        val date = Date()
-        val dateFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
-        val formattedDate = dateFormat.format(date)
+//        val date = Date()
+//        val dateFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+//        val formattedDate = dateFormat.format(date)
 
         val historyMap = hashMapOf(
             "body" to "",
@@ -113,14 +113,14 @@ class CreateAccountActivity : AppCompatActivity() {
             "totalTime" to ""
         )
 
-        val notesMap = hashMapOf(
-            "body" to "",
-            "date" to formattedDate,
-            "isCompleted" to false,
-            "title" to "To Do Title",
-            "totalTime" to "Total: N/A",
-            "isSelectedForPomodoro" to false
-        )
+//        val notesMap = hashMapOf(
+//            "body" to "",
+//            "date" to formattedDate,
+//            "isCompleted" to false,
+//            "title" to "To Do Title",
+//            "totalTime" to "Total: N/A",
+//            "isSelectedForPomodoro" to false
+//        )
 
 //        val petsMap = hashMapOf(
 //            "heartCount" to "",
@@ -154,8 +154,8 @@ class CreateAccountActivity : AppCompatActivity() {
         userDocRef.collection("history").add(historyMap)
             .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create history subcollection: ${e.message}", e) }
 
-        userDocRef.collection("notes").add(notesMap)
-            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create notes subcollection: ${e.message}", e) }
+//        userDocRef.collection("notes").add(notesMap)
+//            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create notes subcollection: ${e.message}", e) }
 
 //        userDocRef.collection("pets").add(petsMap)
 //            .addOnFailureListener { e -> Log.e("FirestoreError", "Failed to create pets subcollection: ${e.message}", e) }
